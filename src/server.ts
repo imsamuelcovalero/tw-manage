@@ -51,12 +51,16 @@ nextApp.prepare().then(() => {
 
   app.get('/api/player', async (req, res) => {
     const allyCode = req.query.allyCode as string;
+    console.log('allyCode', allyCode);
+
 
     if (!allyCode) {
       return res.status(400).send("AllyCode is required");
     }
 
     const targetUrl = constructUrl(`player/${allyCode}/`);
+    console.log('targetUrl', targetUrl);
+
 
     try {
       const response = await fetch(targetUrl);

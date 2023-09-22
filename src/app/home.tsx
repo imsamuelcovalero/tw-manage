@@ -1,5 +1,6 @@
 /* File: src/app/home.tsx */
 import React, { useEffect } from 'react'
+const fs = require('fs');
 
 export default async function Home() {
   function extractGuildId(url: string): string | null {
@@ -27,7 +28,7 @@ export default async function Home() {
   } else {
     try {
       const apiUrl = `http://localhost:3000${getGuildApiLink(guildId)}`;
-      console.log('apiUrl', apiUrl);
+      // console.log('apiUrl', apiUrl);
 
       const response = await fetch(apiUrl);
 
@@ -35,14 +36,14 @@ export default async function Home() {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
-      const data = await response.json();
-      console.log("Guild Data:", data);
-      return (
-        <div className="container">
-          <h1>Home2</h1>
-          <p>{data.data.name}</p>
-        </div>
-      );
+      const { data } = await response.json();
+      // console.log("Guild Data:", data);
+      // return (
+      //   <div className="container">
+      //     <h1>Home2</h1>
+      //     <p>{data.name}</p>
+      //   </div>
+      // );
     } catch (error: any) {
       console.error("There was a problem with the fetch operation:", error.message);
     }
@@ -50,7 +51,7 @@ export default async function Home() {
 
   /** Create player API link */
   function getPlayerApiLink(allyCode: string) {
-    const link = `/api/playerProxy?allyCode=${allyCode}`;
+    const link = `/api/player?allyCode=${allyCode}`;
     // TODO: data check
     // console.log('link', link);
 
@@ -61,6 +62,7 @@ export default async function Home() {
   try {
     const apiUrl = `http://localhost:3000${getPlayerApiLink(allyCode)}`;
     // console.log('apiUrl', apiUrl);
+    console.warn('apiUrl', apiUrl);
 
     const response = await fetch(apiUrl);
     // console.log('response', response);
@@ -71,7 +73,14 @@ export default async function Home() {
     }
 
     const data = await response.json();
-    // console.log(data);
+    // fs.writeFileSync('./data-output.json', JSON.stringify(data, null, 2));
+    // console.log(JSON.stringify(data, null, 2));
+    return (
+      <div className="container">
+        <h1>Home3</h1>
+        <p>{data.data.name}</p>
+      </div>
+    );
   } catch (error: any) {
     console.error("There was a problem with the fetch operation:", error.message);
   }
