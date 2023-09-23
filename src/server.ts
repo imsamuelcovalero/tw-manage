@@ -28,6 +28,7 @@ nextApp.prepare().then(() => {
 
   app.get('/api/guild', async (req, res) => {
     const guildId = req.query.guildId as string;
+    console.log('guildId', guildId);
 
     if (!guildId) {
       return res.status(400).send("Guild ID is required");
@@ -42,6 +43,8 @@ nextApp.prepare().then(() => {
       }
 
       const data = await response.json();
+      // console.log('data', data.data.members);
+
       res.json(data);
     } catch (error: any) {
       console.error("There was a problem with the fetch operation:", error.message);
@@ -59,7 +62,7 @@ nextApp.prepare().then(() => {
     }
 
     const targetUrl = constructUrl(`player/${allyCode}/`);
-    console.log('targetUrl', targetUrl);
+    // console.log('targetUrl', targetUrl);
 
 
     try {
@@ -75,29 +78,6 @@ nextApp.prepare().then(() => {
       res.status(500).send("Internal Server Error");
     }
   });
-
-  // Proxy para a API
-  // app.get('/api/playerProxy', async (req, res) => {
-  //   const allyCode = req.query.allyCode as string;
-  //   console.log('allyCode', allyCode);
-
-  //   const targetUrl = `https://swgoh.gg/api/player/${allyCode}/`;
-
-  //   try {
-  //     // const fetch = (await import('node-fetch')).default;
-  //     const response = await fetch(targetUrl);
-  //     if (!response.ok) {
-  //       throw new Error(`HTTP error! Status: ${response.status}`);
-  //     }
-
-  //     const data = await response.json();
-  //     res.json(data); // Envie os dados para o cliente
-
-  //   } catch (error: any) {
-  //     console.error("There was a problem with the fetch operation:", error.message);
-  //     res.status(500).send("Internal Server Error"); // Envie um erro ao cliente
-  //   }
-  // });
 
   // Manipula todos os outros pedidos com o Next.js
   app.all('*', (req, res) => {
