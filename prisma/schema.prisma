@@ -12,9 +12,37 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
-model Member {
-  id             Int     @id @default(autoincrement())
+model BackupMember {
+  id             Int    @id @default(autoincrement())
   player_name    String
-  galactic_power Int?
-  ally_code      Int     @unique
+  galactic_power Int
+  ally_code      Int    @unique
+  guildId        Int?
+}
+
+model Member {
+  id             Int    @id @default(autoincrement())
+  player_name    String
+  galactic_power Int
+  ally_code      Int    @unique
+  guildId        String
+}
+
+model Guild {
+  id        Int      @id @default(autoincrement())
+  name      String
+  url       String   @unique
+}
+
+model Unit {
+  id       Int      @id @default(autoincrement())
+  name     String
+  quantity Int
+  omicron  Int
+}
+
+model Ship {
+  id       Int      @id @default(autoincrement())
+  name     String
+  quantity Int
 }
