@@ -17,7 +17,7 @@ model BackupMember {
   player_name    String
   galactic_power Int
   ally_code      Int    @unique
-  guildId        Int?
+  guildId        String?
 }
 
 model Member {
@@ -25,7 +25,7 @@ model Member {
   player_name    String
   galactic_power Int
   ally_code      Int    @unique
-  guildId        String
+  guildId        String?
 }
 
 model Guild {
@@ -35,14 +35,18 @@ model Guild {
 }
 
 model Unit {
-  id       Int      @id @default(autoincrement())
-  name     String
-  quantity Int
-  omicron  Int
+  id         Int      @id @default(autoincrement())
+  base_id    String   @unique
+  name       String
+  quantity   Int
+  omicron_count_1 Int
+  omicron_count_2 Int
+  omicron_count_3 Int
 }
 
 model Ship {
   id       Int      @id @default(autoincrement())
+  base_id  String   @unique
   name     String
   quantity Int
 }

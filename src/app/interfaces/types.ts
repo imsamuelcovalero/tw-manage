@@ -4,7 +4,7 @@ export interface IMember {
   player_name: string;
   galactic_power: number;
   ally_code: number;
-  guildId?: number;
+  guildId?: string | null;
 }
 
 export interface IGuildCreationInput {
@@ -17,17 +17,19 @@ export interface IGuild {
   name: string;
   url: string;
 }
-
 // Representa a base para entidades do jogo (unidades e navios)
 interface IGameEntity {
   id?: number;
+  base_id: string;
   name: string;
   quantity: number;
 }
 
 // Unidades herdam propriedades de IGameEntity e adicionam propriedades específicas
 export interface IUnit extends IGameEntity {
-  omicron: boolean;
+  omicron_count_1: number;
+  omicron_count_2: number;
+  omicron_count_3: number;
 }
 
 // Navios herdam propriedades de IGameEntity

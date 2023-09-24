@@ -1,3 +1,4 @@
+/* File: src/app/services/prismaGuildService.ts */
 import { PrismaClient } from '@prisma/client';
 import { IGuild, IGuildCreationInput } from '../interfaces/types'; // Ajuste o caminho conforme necessário.
 

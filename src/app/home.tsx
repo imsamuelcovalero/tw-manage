@@ -24,7 +24,7 @@ export default async function Home() {
   // console.log('player', player);
 
   const guild = await getCurrentGuild();
-  console.log('guild', guild);
+  // console.log('guild', guild);
 
 
   return (
