@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "nodemon --watch src/server.ts --exec 'ts-node -O \"{\\\"module\\\": \\\"CommonJS\\\"}\" src/server.ts'",
-    "build": "next build && prisma generate",
+    "build": "next build",
     "start": "NODE_ENV=production ts-node server.ts",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^5.3.1",
