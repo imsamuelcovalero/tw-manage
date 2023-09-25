@@ -5,7 +5,7 @@ export function getPlayerApiLink(allyCode: string) {
 
 export async function fetchPlayerData(allyCode: string) {
   try {
-    const apiUrl = `http://localhost:3000${getPlayerApiLink(allyCode)}`;
+    const apiUrl = `${process.env.BASE_URL}${getPlayerApiLink(allyCode)}`;
     const response = await fetch(apiUrl, { cache: 'no-store' });
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
