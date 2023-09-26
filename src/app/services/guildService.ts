@@ -1,4 +1,4 @@
-// Funções para a lógica da guilda
+/* File: src/app/services/guildService.ts */
 export function extractGuildId(url: string): string | null {
   const match = url.match(/\/g\/([^\/]+)\//);
   return match ? match[1] : null;
