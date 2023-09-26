@@ -24,12 +24,13 @@ export default async function Home() {
   // console.log('player', player);
 
   const guild = await getCurrentGuild();
-  // console.log('guild', guild);
+  console.log('guild', guild);
 
 
   return (
     <div className="container">
       <h1>Home</h1>
+      {/* <p>Guild Name: {data.data.name}</p> */}
       <p>Guild Name: {guild?.name}</p>
       {/* <p>Player Name: {player.data.name}</p> */}
 
