@@ -28,7 +28,7 @@ nextApp.prepare().then(() => {
 
   app.get('/api/guild', async (req, res) => {
     const guildId = req.query.guildId as string;
-    console.log('guildId', guildId);
+    console.log('guildId_S', guildId);
 
     if (!guildId) {
       return res.status(400).send("Guild ID is required");

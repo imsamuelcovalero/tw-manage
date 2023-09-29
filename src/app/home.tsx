@@ -3,8 +3,9 @@ import React, { useEffect } from 'react'
 import { fetchGuildData, extractGuildId } from './services/guildService';
 import { fetchPlayerData } from './services/playerService';
 import { IGuild } from './interfaces/types';
-import { upsertGuild, getCurrentGuild } from './services/prismaGuildService';
-import { upsertMember } from './services/prismaMembersService';
+import { upsertGuild, getCurrentGuild, getAllGuilds } from './services/prismaGuildService';
+import { upsertMember, getMembers } from './services/prismaMembersService';
+import GuildUrlInput from './components/guildUrlInput';
 
 export default async function Home() {
   function transformGuildData(data: any): IGuild {
@@ -21,12 +22,15 @@ export default async function Home() {
   await upsertGuild(transformedData);
 
   const guild = await getCurrentGuild();
+  // const guild = await getAllGuilds();
   console.log('guild', guild);
 
   if (!guild) {
     console.log('Guild not found');
     return;
   }
+
+  // const isGuildExisting = Boolean(guild?.url);
 
   /* Aqui vamos testar inserir os membros na tabela de membros */
   // Get the guildId from the URL
@@ -47,15 +51,17 @@ export default async function Home() {
     }
   }
 
+  const members = await getMembers();
+
   const allyCode = "417229579";
-  const player = await fetchPlayerData(allyCode);
+  // const player = await fetchPlayerData(allyCode);
   // console.log('player', player);
 
 
   return (
     <div className="container">
       <h1>Home</h1>
-      {/* <p>Guild Name: {data.data.name}</p> */}
+      <GuildUrlInput guild={guild} />
       <p>Guild Name: {guild?.name}</p>
       {/* <p>Player Name: {player.data.name}</p> */}
 
@@ -78,7 +84,7 @@ export default async function Home() {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {data.data.members.map((member: any, index: any) => (
+          {members.map((member: any, index: any) => (
             <tr key={member.ally_code}>
               <td className="px-6 py-4 whitespace-nowrap">
                 {index + 1}
