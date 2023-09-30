@@ -1,6 +1,6 @@
 /* File: src/app/services/prismaGuildService.ts */
 import { PrismaClient } from '@prisma/client';
-import { IGuild, IGuildCreationInput } from '../interfaces/types'; // Ajuste o caminho conforme necessário.
+import { IGuild, IGuildCreationInput } from '../interfaces/types';
 
 const prisma = new PrismaClient();
 
@@ -20,7 +20,7 @@ export async function upsertGuild(guildData: IGuild): Promise<IGuild> {
   });
 }
 
-// Função para consultar informações de uma guilda pelo ID.
+// Função para consultar informações da guilda atual.
 export async function getCurrentGuild(): Promise<IGuild | null> {
   return await prisma.guild.findFirst();
 }

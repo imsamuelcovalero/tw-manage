@@ -16,24 +16,15 @@ export async function backupCurrentMembers(): Promise<void> {
 }
 
 // Função para fazer upsert na tabela 'Members'
-export async function upsertMember(memberData: IMember): Promise<IMember> {
-  const existingMember = await prisma.member.findUnique({
-    where: {
-      ally_code: memberData.ally_code
-    }
-  });
-
-  if (existingMember) {
-    return await prisma.member.update({
-      where: {
-        id: existingMember.id
-      },
-      data: memberData
-    });
-  } else {
-    return await prisma.member.create({
-      data: memberData
-    });
+export async function upsertMembers(membersData: IMember[]): Promise<boolean> {
+  try {
+    await backupCurrentMembers();
+    await prisma.member.deleteMany();
+    await prisma.member.createMany({ data: membersData });
+    return true;
+  } catch (error) {
+    console.error('Error in upsertMembers:', error);
+    return false;
   }
 }
 

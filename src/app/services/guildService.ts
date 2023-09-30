@@ -1,3 +1,5 @@
+import { IMember } from "../interfaces/types";
+
 /* File: src/app/services/guildService.ts */
 export function extractGuildId(url: string): string | null {
   const match = url.match(/\/g\/([^\/]+)\//);
