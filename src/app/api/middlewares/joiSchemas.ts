@@ -10,6 +10,8 @@ export const memberSchema = Joi.array().items(
   })
 );
 
+export const allyCodesSchema = Joi.array().items(Joi.number().required()).min(1);
+
 export const guildSchema = Joi.object({
   name: Joi.string().required(),
   url: Joi.string().required().uri(),

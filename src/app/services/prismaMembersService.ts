@@ -28,6 +28,23 @@ export async function upsertMembers(membersData: IMember[]): Promise<boolean> {
   }
 }
 
+// Função para remover membros específicos da tabela 'Members'
+export async function removeMembersByAllyCodes(allyCodes: number[]): Promise<boolean> {
+  try {
+    await prisma.member.deleteMany({
+      where: {
+        ally_code: {
+          in: allyCodes
+        }
+      }
+    });
+    return true;
+  } catch (error) {
+    console.error('Error in removeMembersByAllyCodes:', error);
+    return false;
+  }
+}
+
 // Função para consultar os players de 'BackupMembers'
 export async function getBackupMembers(): Promise<IMember[]> {
   return await prisma.backupMember.findMany();

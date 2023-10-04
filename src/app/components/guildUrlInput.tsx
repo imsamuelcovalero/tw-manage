@@ -6,6 +6,7 @@ import { prepareMembersData } from '../services/memberSevice';
 import { upsertGuild, getCurrentGuild } from '../services/prismaGuildService';
 import { IGuild } from '../interfaces/types';
 import { toast } from 'react-toastify';
+import * as apiService from '../services/apiService';
 
 function GuildUrlInput({ guild }: { guild: IGuild }) {
   const [inputValue, setInputValue] = useState(guild?.url || "");
@@ -41,41 +42,18 @@ function GuildUrlInput({ guild }: { guild: IGuild }) {
     // console.log('transformedData', transformedData);
 
     try {
-      const guildResponse = await fetch('/api/upsertGuild', {
-        cache: 'no-store',
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(transformedData),
-      });
-
-      const guildResponseData = await guildResponse.json();
-
-      if (!guildResponse.ok) {
-        throw new Error(guildResponseData.message || 'Failed to upsert guild');
-      }
-
-      toast.success(guildResponseData.message || "Guilda iniciada com sucesso!");
+      const guildResponseData = await apiService.upsertGuild(transformedData);
 
       // Após ter sucesso em inserir a guilda
       const preparedMembers = prepareMembersData(data.data.members, inputValue);
+      const membersResponseData = await apiService.upsertMembers(preparedMembers);
 
-      const membersResponse = await fetch('/api/members', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(preparedMembers),
-      });
-
-      const membersResponseData = await membersResponse.json();
-
-      if (!membersResponse.ok) {
-        throw new Error(membersResponseData.message || 'Failed to upsert members');
+      if (isGuildExisting && inputValue === guild?.url) {
+        toast.success("TW Reiniciada com sucesso!");
+      } else {
+        toast.success(guildResponseData.message);
+        toast.success(membersResponseData.message);
       }
-
-      toast.success(membersResponseData.message);
 
     } catch (error: unknown) {
       if (error instanceof Error) {

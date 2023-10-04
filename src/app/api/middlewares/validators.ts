@@ -2,9 +2,9 @@
 import Joi from 'joi';
 import CustomError from '../errors/CustomError';
 
-import { memberSchema, guildSchema } from './joiSchemas';
+import { memberSchema, guildSchema, allyCodesSchema } from './joiSchemas';
 
-type SchemaName = 'memberSchema' | 'guildSchema';
+type SchemaName = 'memberSchema' | 'guildSchema' | 'allyCodesSchema';
 
 function validate(schema: Joi.ObjectSchema | Joi.ArraySchema, schemaName: SchemaName) {
   return (data: any) => {
@@ -30,6 +30,7 @@ function validate(schema: Joi.ObjectSchema | Joi.ArraySchema, schemaName: Schema
 const validators = {
   validateMembersData: validate(memberSchema, 'memberSchema'),
   validateGuildData: validate(guildSchema, 'guildSchema'),
+  validateAllyCodesData: validate(allyCodesSchema, 'allyCodesSchema'),
 };
 
 export default validators;

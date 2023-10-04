@@ -5,19 +5,26 @@ import { IGuild, IGuildCreationInput } from '../interfaces/types';
 const prisma = new PrismaClient();
 
 // Função para inserir ou atualizar uma guilda.
-export async function upsertGuild(guildData: IGuild): Promise<IGuild> {
-  // Deletar todas as guildas existentes
-  await prisma.guild.deleteMany();
+export async function upsertGuild(guildData: IGuild): Promise<boolean> {
+  try {
+    // Deletar todas as guildas existentes
+    await prisma.guild.deleteMany();
 
-  // Criar uma nova entrada com os novos dados
-  const creationData: IGuildCreationInput = {
-    name: guildData.name,
-    url: guildData.url
-  };
+    // Criar uma nova entrada com os novos dados
+    const creationData: IGuildCreationInput = {
+      name: guildData.name,
+      url: guildData.url
+    };
 
-  return await prisma.guild.create({
-    data: creationData
-  });
+    await prisma.guild.create({
+      data: creationData
+    });
+
+    return true; // Se chegou até aqui, a operação foi bem-sucedida
+  } catch (error) {
+    console.error('Error in upsertGuild:', error);
+    return false; // Houve um erro durante a operação
+  }
 }
 
 // Função para consultar informações da guilda atual.
