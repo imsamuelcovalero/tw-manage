@@ -14,6 +14,7 @@ function GuildMembersTable({ members }: IGuildMembersTableProps) {
   const [selectedMembers, setSelectedMembers] = useState<number[]>([]);
   const [sortColumn, setSortColumn] = useState<"player_name" | "galactic_power">("galactic_power");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
+  const [searchValue, setSearchValue] = useState('');
 
   const router = useRouter();
 
@@ -57,9 +58,20 @@ function GuildMembersTable({ members }: IGuildMembersTableProps) {
     }
   }
 
+  const filteredMembers = sortedMembers.filter(member =>
+    member.player_name.toLowerCase().includes(searchValue.toLowerCase())
+  );
+
   return (
     <div className="container">
       <h2>Membros da Guilda</h2>
+      <input
+        type="text"
+        placeholder="Buscar pelo nome do jogador..."
+        value={searchValue}
+        onChange={(e) => setSearchValue(e.target.value)}
+        className="my-2 p-2 border rounded w-full"
+      />
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="bg-gray-50">
           <tr>
@@ -101,7 +113,7 @@ function GuildMembersTable({ members }: IGuildMembersTableProps) {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {sortedMembers.map((member, index) => (
+          {filteredMembers.map((member, index) => (
             <tr key={member.ally_code}>
               <td className="px-6 py-4 whitespace-nowrap">
                 {index + 1}
@@ -130,8 +142,8 @@ function GuildMembersTable({ members }: IGuildMembersTableProps) {
       </table>
       <button
         className={`fixed bottom-4 right-4 py-2 px-4 rounded z-10 ${selectedMembers.length
-            ? "bg-red-500 hover:bg-red-600 text-white"
-            : "bg-red-200 text-red-500 cursor-not-allowed"
+          ? "bg-red-500 hover:bg-red-600 text-white"
+          : "bg-red-200 text-red-500 cursor-not-allowed"
           }`}
         onClick={handleRemoveSelected}
         disabled={!selectedMembers.length}
