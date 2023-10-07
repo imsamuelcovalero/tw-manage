@@ -3,15 +3,20 @@
 import { useState, useEffect } from 'react';
 import { fetchGuildData } from '../services/guildService';
 import { prepareMembersData } from '../services/memberSevice';
-import { upsertGuild, getCurrentGuild } from '../services/prismaGuildService';
+// import { upsertGuild, getCurrentGuild } from '../services/prismaGuildService';
 import { IGuild } from '../interfaces/types';
 import { toast } from 'react-toastify';
 import * as apiService from '../services/apiService';
+// import { useGuild } from '../providers/TwManageProvider';
+import { useRouter } from 'next/navigation';
 
 function GuildUrlInput({ guild }: { guild: IGuild }) {
   const [inputValue, setInputValue] = useState(guild?.url || "");
   const [isValidUrl, setIsValidUrl] = useState(true);
   const isGuildExisting = Boolean(guild?.url);
+
+  // const { updateGuild } = useGuild();
+  const router = useRouter();
 
   const urlPattern = /^https:\/\/swgoh\.gg\/g\/[a-zA-Z0-9\-_]+\/$/; // expressão regular para validar nossa URL específica
 
@@ -55,6 +60,7 @@ function GuildUrlInput({ guild }: { guild: IGuild }) {
         toast.success(membersResponseData.message);
       }
 
+      router.refresh();
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error(error.message);

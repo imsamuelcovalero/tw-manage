@@ -6,23 +6,14 @@ import { IGuild } from './interfaces/types';
 import { upsertGuild, getCurrentGuild, getAllGuilds } from './services/prismaGuildService';
 import { upsertMembers, getMembers } from './services/prismaMembersService';
 import GuildUrlInput from './components/guildUrlInput';
+// import { useGuild } from './providers/TwManageProvider';
 
 export default async function Home() {
-  // function transformGuildData(data: any): IGuild {
-  //   return {
-  //     name: data.name,
-  //     url: "https://swgoh.gg/g/iGco7HmDSm6VbbIOxGoHuA/" // URL hardcoded
-  //   };
-  // }
-
-  // const guildURL = "https://swgoh.gg/g/iGco7HmDSm6VbbIOxGoHuA/";
-  // const data = await fetchGuildData(guildURL);
-  // console.log('data', data.data.members);
-  // const transformedData = transformGuildData(data.data);
-  // await upsertGuild(transformedData);
 
   const guild = await getCurrentGuild();
-  console.log('guild', guild);
+  // console.log('guild', guild);
+  // const { guild: contextGuild } = useGuild();
+  // console.log('contextGuild', contextGuild);
 
   if (!guild) {
     console.log('Guild not found');
@@ -36,20 +27,6 @@ export default async function Home() {
   // Get the guildId from the URL
   const guildId = extractGuildId(guild.url);
 
-  // If we have a valid guildId, proceed to add the members
-  // if (guildId) {
-  //   for (let member of data.data.members) {
-  //     const memberData = {
-  //       player_name: member.player_name,
-  //       galactic_power: member.galactic_power,
-  //       ally_code: member.ally_code,
-  //       guildId: guildId  // Set the guildId for the member
-  //     };
-
-  //     await upsertMember(memberData);
-  //   }
-  // }
-
   const members = await getMembers();
 
   if (!members) {
@@ -57,9 +34,13 @@ export default async function Home() {
     const membersData = data.data.members;
   }
 
-  const allyCode = "417229579";
+  // const allyCode = "417229579";
   // const player = await fetchPlayerData(allyCode);
   // console.log('player', player);
+
+  // const reFetchData = async () => {
+  //   const guild = await getCurrentGuild();
+  // };
 
 
   return (
