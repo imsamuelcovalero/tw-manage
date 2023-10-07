@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { fetchUnitsData, fetchShipsData } from '../services/unitService';
 import { ISelectedUnit } from '../interfaces/types';
+import ReactSelect from 'react-select';
 
 interface ISelectedUnitsDisplayProps {
   selectedUnits: ISelectedUnit[];
@@ -12,6 +13,8 @@ function SelectedUnitsDisplay({ selectedUnits }: ISelectedUnitsDisplayProps) {
   const [units, setUnits] = useState<ISelectedUnit[]>([]);
   const [ships, setShips] = useState<ISelectedUnit[]>([]);
   const [unitsSelected, setUnitsSelected] = useState<ISelectedUnit[]>([]);
+  const [unitSearchValue, setUnitSearchValue] = useState('');
+  const [shipSearchValue, setShipSearchValue] = useState('');
 
   function processUnitData(data: any): ISelectedUnit[] {
     return data.map((unit: any) => ({
@@ -42,9 +45,13 @@ function SelectedUnitsDisplay({ selectedUnits }: ISelectedUnitsDisplayProps) {
     fetchData();
   }, []);
 
-  const handleSelect = (type: 'unit' | 'ship', base_id: string) => {
+  const handleSelect = (type: 'unit' | 'ship', selectedOption: any) => {
+    if (!selectedOption || !selectedOption.value) return; // Adicione esta verificação
+
+    const base_id = selectedOption.value; // Extraia o base_id aqui
     const allData = type === 'unit' ? units : ships;
     const selected = allData.find(u => u.base_id === base_id);
+
     if (selected && !unitsSelected.some(u => u.base_id === selected.base_id)) {
       setUnitsSelected(prev => [...prev, selected]);
 
@@ -59,24 +66,45 @@ function SelectedUnitsDisplay({ selectedUnits }: ISelectedUnitsDisplayProps) {
   const availableUnits = units.filter(u => !selectedUnits.some(su => su.base_id === u.base_id));
   const availableShips = ships.filter(s => !selectedUnits.some(su => su.base_id === s.base_id));
 
+  // Filtrar unidades e navios disponíveis com base na busca
+  const filteredUnits = availableUnits.filter(unit =>
+    unit.name.toLowerCase().includes(unitSearchValue.toLowerCase())
+  );
+
+  const filteredShips = availableShips.filter(ship =>
+    ship.name.toLowerCase().includes(shipSearchValue.toLowerCase())
+  );
+
+  // Opções para o dropdown de unidades
+  const unitOptions = availableUnits.map(unit => ({ value: unit.base_id, label: unit.name }));
+
+  // Opções para o dropdown de navios
+  const shipOptions = availableShips.map(ship => ({ value: ship.base_id, label: ship.name }));
+
   return (
     <div className="selected-units-section p-6 bg-white shadow-md rounded-lg">
       <h2 className="text-xl font-bold mb-4">Unidades Selecionadas</h2>
 
-      <div className="dropdowns-section mb-4 flex gap-4">
-        <select className="w-1/2 p-2 border rounded" onChange={(e) => handleSelect('unit', e.target.value)}>
-          <option value="">Selecione uma unidade</option>
-          {availableUnits.map(unit => (
-            <option key={unit.base_id} value={unit.base_id}>{unit.name}</option>
-          ))}
-        </select>
+      <div className="dropdowns-section mb-4 flex gap-4 flex-col md:flex-row">
+        {/* Campo de busca para units */}
+        <div className="mb-2 w-full md:w-1/2">
+          <ReactSelect
+            options={unitOptions}
+            isSearchable
+            placeholder="Selecione uma unidade"
+            onChange={(selectedOption) => handleSelect('unit', selectedOption?.value)}
+          />
+        </div>
 
-        <select className="w-1/2 p-2 border rounded" onChange={(e) => handleSelect('ship', e.target.value)}>
-          <option value="">Selecione um navio</option>
-          {availableShips.map(ship => (
-            <option key={ship.base_id} value={ship.base_id}>{ship.name}</option>
-          ))}
-        </select>
+        {/* Campo de busca para navios */}
+        <div className="mb-2 w-full md:w-1/2">
+          <ReactSelect
+            options={shipOptions}
+            isSearchable
+            placeholder="Selecione um navio"
+            onChange={(selectedOption) => handleSelect('ship', selectedOption?.value)}
+          />
+        </div>
       </div>
 
       <div className="selected-units flex flex-wrap gap-2">
