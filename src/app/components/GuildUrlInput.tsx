@@ -3,11 +3,9 @@
 import { useState, useEffect } from 'react';
 import { fetchGuildData } from '../services/guildService';
 import { prepareMembersData } from '../services/memberSevice';
-// import { upsertGuild, getCurrentGuild } from '../services/prismaGuildService';
 import { IGuild } from '../interfaces/types';
 import { toast } from 'react-toastify';
 import * as apiService from '../services/apiService';
-// import { useGuild } from '../providers/TwManageProvider';
 import { useRouter } from 'next/navigation';
 
 function GuildUrlInput({ guild }: { guild: IGuild }) {
@@ -15,7 +13,6 @@ function GuildUrlInput({ guild }: { guild: IGuild }) {
   const [isValidUrl, setIsValidUrl] = useState(true);
   const isGuildExisting = Boolean(guild?.url);
 
-  // const { updateGuild } = useGuild();
   const router = useRouter();
 
   const urlPattern = /^https:\/\/swgoh\.gg\/g\/[a-zA-Z0-9\-_]+\/$/; // expressão regular para validar nossa URL específica
@@ -28,17 +25,17 @@ function GuildUrlInput({ guild }: { guild: IGuild }) {
     setIsValidUrl(urlPattern.test(url));
   };
 
+  function guildData(data: any): IGuild {
+    return {
+      name: data.name,
+      url: inputValue
+    };
+  }
+
   const handleButtonClick = async () => {
     if (!isValidUrl) {
       toast.error("Por favor, insira uma URL válida.");
       return;
-    }
-
-    function guildData(data: any): IGuild {
-      return {
-        name: data.name,
-        url: inputValue
-      };
     }
 
     const data = await fetchGuildData(inputValue);
@@ -75,9 +72,7 @@ function GuildUrlInput({ guild }: { guild: IGuild }) {
 
   return (
     <div className="container">
-      {/* ... */}
       <div className="my-4">
-        {/* ... */}
         <div className="mt-1 flex rounded-md shadow-sm">
           <input
             type="text"
@@ -97,7 +92,6 @@ function GuildUrlInput({ guild }: { guild: IGuild }) {
         </div>
         {!isValidUrl && <p className="text-sm text-red-500 mt-2">Por favor, insira uma URL válida.</p>}
       </div>
-      {/* Restante do código */}
     </div>
   );
 }
