@@ -1,5 +1,4 @@
 /* File: src/app/api/member/route.tsx */
-import { NextResponse } from 'next/server'
 import { upsertMembers, removeMembersByAllyCodes } from '@/app/services/prismaMembersService';
 import validators from '@/app/api/middlewares/validators';
 import { handleDatabaseOperation } from '../helpers';

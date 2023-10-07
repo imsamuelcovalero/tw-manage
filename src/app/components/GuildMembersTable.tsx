@@ -2,6 +2,9 @@
 "use client";
 import { useState } from 'react';
 import { IMember } from '../interfaces/types';
+import { removeMembers } from '../services/apiService';
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
 
 interface IGuildMembersTableProps {
   members: IMember[];
@@ -11,6 +14,8 @@ function GuildMembersTable({ members }: IGuildMembersTableProps) {
   const [selectedMembers, setSelectedMembers] = useState<number[]>([]);
   const [sortColumn, setSortColumn] = useState<"player_name" | "galactic_power">("galactic_power");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
+
+  const router = useRouter();
 
   const sortedMembers = [...members].sort((a, b) => {
     if (sortDirection === "asc") {
@@ -29,6 +34,28 @@ function GuildMembersTable({ members }: IGuildMembersTableProps) {
       );
     }
   };
+
+  async function handleRemoveSelected() {
+    try {
+      await removeMembers(selectedMembers);
+      // Atualizar a lista de membros após exclusão (se necessário)
+      // setMembers(members => members.filter(member => !selectedMembers.includes(member.ally_code)));
+
+      // Limpar a lista de membros selecionados após a exclusão
+      setSelectedMembers([]);
+
+      router.refresh();
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(error.message);
+        toast.error(error.message);
+      } else {
+        // Handle any other unknown errors
+        console.error('An unexpected error occurred:', error);
+        toast.error('An unexpected error occurred.');
+      }
+    }
+  }
 
   return (
     <div className="container">
@@ -101,6 +128,16 @@ function GuildMembersTable({ members }: IGuildMembersTableProps) {
           ))}
         </tbody>
       </table>
+      <button
+        className={`fixed bottom-4 right-4 py-2 px-4 rounded z-10 ${selectedMembers.length
+            ? "bg-red-500 hover:bg-red-600 text-white"
+            : "bg-red-200 text-red-500 cursor-not-allowed"
+          }`}
+        onClick={handleRemoveSelected}
+        disabled={!selectedMembers.length}
+      >
+        Remover Membros Selecionados
+      </button>
     </div>
   );
 }
