@@ -17,6 +17,7 @@ export interface IGuild {
   name: string;
   url: string;
 }
+
 // Representa a base para entidades do jogo (unidades e navios)
 interface IGameEntity {
   id?: number;
@@ -34,3 +35,11 @@ export interface IUnit extends IGameEntity {
 
 // Navios herdam propriedades de IGameEntity
 export interface IShip extends IGameEntity { }
+
+// Representa uma unidade ou navio selecionado pelo usuário
+export interface ISelectedUnit {
+  id?: number;
+  base_id: string;
+  name: string;
+  type: 'UNIT' | 'SHIP';
+}

@@ -49,3 +49,15 @@ model Ship {
   name     String
   quantity Int
 }
+
+model SelectedUnit {
+  id         Int      @id @default(autoincrement())
+  base_id    String   @unique
+  name       String
+  type       UnitType 
+}
+
+enum UnitType {
+  UNIT
+  SHIP
+}

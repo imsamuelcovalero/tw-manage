@@ -1,6 +1,6 @@
 /* File: src/app/services/prismaUnitsService.ts */
 import { PrismaClient } from '@prisma/client';
-import { IUnit, IShip } from '../interfaces/types';
+import { IUnit, IShip, ISelectedUnit } from '../interfaces/types';
 
 const prisma = new PrismaClient();
 
@@ -74,6 +74,36 @@ export async function getShipByBaseId(base_id: string): Promise<IShip | null> {
       base_id: base_id
     }
   });
+}
+
+// Função para adicionar uma unidade selecionada
+export async function addSelectedUnit(base_id: string, name: string, type: 'UNIT' | 'SHIP'): Promise<void> {
+  await prisma.selectedUnit.create({
+    data: {
+      base_id,
+      name,
+      type
+    }
+  });
+}
+
+// Função para recuperar todas as unidades selecionadas
+export async function getAllSelectedUnits(): Promise<ISelectedUnit[]> {
+  return await prisma.selectedUnit.findMany();
+}
+
+// Função para excluir uma unidade selecionada
+export async function deleteSelectedUnit(base_id: string): Promise<void> {
+  await prisma.selectedUnit.delete({
+    where: {
+      base_id
+    }
+  });
+}
+
+// Função para excluir todas as unidades selecionadas
+export async function deleteAllSelectedUnits(): Promise<void> {
+  await prisma.selectedUnit.deleteMany();
 }
 
 // Lembre-se de fechar a conexão do Prisma quando seu servidor for encerrado.

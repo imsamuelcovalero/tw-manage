@@ -79,6 +79,40 @@ nextApp.prepare().then(() => {
     }
   });
 
+  app.get('/api/units', async (_req, res) => {
+    const targetUrl = constructUrl(`units/`);
+
+    try {
+      const response = await fetch(targetUrl);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      res.json(data);
+    } catch (error: any) {
+      console.error("There was a problem with the fetch operation:", error.message);
+      res.status(500).send("Internal Server Error");
+    }
+  });
+
+  app.get('/api/ships', async (_req, res) => {
+    const targetUrl = constructUrl(`ships/`);
+
+    try {
+      const response = await fetch(targetUrl);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      res.json(data);
+    } catch (error: any) {
+      console.error("There was a problem with the fetch operation:", error.message);
+      res.status(500).send("Internal Server Error");
+    }
+  });
+
   // Manipula todos os outros pedidos com o Next.js
   app.all('*', (req, res) => {
     return nextHandler(req, res);
