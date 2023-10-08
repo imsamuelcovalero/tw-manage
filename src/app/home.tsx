@@ -57,17 +57,6 @@ export default async function Home() {
       <GuildUrlInput guild={guild} />
       <p>Guild Name: {guild?.name}</p>
       <SelectedUnitsDisplay selectedUnits={selectedUnits} />
-      {/* <p>Player Name: {player.data.name}</p> */}
-      {/* <div className="selection-section">
-        <Dropdown title="Unidades" items={unitsFromAPI} onSelect={handleUnitSelect} />
-        <Dropdown title="Navios" items={shipsFromAPI} onSelect={handleShipSelect} />
-        <div className="selected-units">
-          {selectedUnits.map(unit =>
-            <span className="unit-tag" title={unit.name}>{unit.name}</span>
-          )}
-        </div>
-      </div> */}
-      <GuildMembersTable members={members} />
       <GuildMembersTable members={members} />
     </div>
   )

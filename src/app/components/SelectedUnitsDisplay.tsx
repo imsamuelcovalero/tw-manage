@@ -13,6 +13,8 @@ function SelectedUnitsDisplay({ selectedUnits }: ISelectedUnitsDisplayProps) {
   const [units, setUnits] = useState<ISelectedUnit[]>([]);
   const [ships, setShips] = useState<ISelectedUnit[]>([]);
   const [unitsSelected, setUnitsSelected] = useState<ISelectedUnit[]>([]);
+  console.log('unitsSelected', unitsSelected);
+
   const [unitSearchValue, setUnitSearchValue] = useState('');
   const [shipSearchValue, setShipSearchValue] = useState('');
 
@@ -35,9 +37,9 @@ function SelectedUnitsDisplay({ selectedUnits }: ISelectedUnitsDisplayProps) {
   useEffect(() => {
     async function fetchData() {
       const unitsData = await fetchUnitsData();
-      console.log('unitsData', unitsData);
+      // console.log('unitsData', unitsData);
       const shipsData = await fetchShipsData();
-      console.log('shipsData', shipsData);
+      // console.log('shipsData', shipsData);
       setUnits(processUnitData(unitsData.data));
       setShips(processShipData(shipsData));
     }
@@ -92,7 +94,7 @@ function SelectedUnitsDisplay({ selectedUnits }: ISelectedUnitsDisplayProps) {
             options={unitOptions}
             isSearchable
             placeholder="Selecione uma unidade"
-            onChange={(selectedOption) => handleSelect('unit', selectedOption?.value)}
+            onChange={(selectedOption) => handleSelect('unit', selectedOption)}
           />
         </div>
 
@@ -102,7 +104,7 @@ function SelectedUnitsDisplay({ selectedUnits }: ISelectedUnitsDisplayProps) {
             options={shipOptions}
             isSearchable
             placeholder="Selecione um navio"
-            onChange={(selectedOption) => handleSelect('ship', selectedOption?.value)}
+            onChange={(selectedOption) => handleSelect('ship', selectedOption)}
           />
         </div>
       </div>

@@ -1,10 +1,11 @@
 // src/app/components/GuildMembersTable.tsx
 "use client";
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { IMember } from '../interfaces/types';
 import { removeMembers } from '../services/apiService';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
+import TwManageContext from '../providers/TwManageContext';
 
 interface IGuildMembersTableProps {
   members: IMember[];
@@ -15,6 +16,8 @@ function GuildMembersTable({ members }: IGuildMembersTableProps) {
   const [sortColumn, setSortColumn] = useState<"player_name" | "galactic_power">("galactic_power");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
   const [searchValue, setSearchValue] = useState('');
+
+  const { isMembersTableExpanded, toggleMembersTable } = useContext(TwManageContext);
 
   const router = useRouter();
 
@@ -38,12 +41,15 @@ function GuildMembersTable({ members }: IGuildMembersTableProps) {
 
   async function handleRemoveSelected() {
     try {
-      await removeMembers(selectedMembers);
-      // Atualizar a lista de membros após exclusão (se necessário)
-      // setMembers(members => members.filter(member => !selectedMembers.includes(member.ally_code)));
+      // Se nenhum membro estiver selecionado, encolhe a tabela.
+      if (!selectedMembers.length) {
+        toggleMembersTable();
+        return;
+      }
 
-      // Limpar a lista de membros selecionados após a exclusão
+      await removeMembers(selectedMembers);
       setSelectedMembers([]);
+      toggleMembersTable();
 
       router.refresh();
     } catch (error: unknown) {
@@ -112,44 +118,55 @@ function GuildMembersTable({ members }: IGuildMembersTableProps) {
             </th>
           </tr>
         </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
-          {filteredMembers.map((member, index) => (
-            <tr key={member.ally_code}>
-              <td className="px-6 py-4 whitespace-nowrap">
-                {index + 1}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                {member.player_name}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                {member.galactic_power}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                {member.ally_code}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <input
-                  type="checkbox"
-                  checked={selectedMembers.includes(member.ally_code)}
-                  onChange={(e) =>
-                    handleCheckboxChange(member.ally_code, e.target.checked)
-                  }
-                />
+        {isMembersTableExpanded ? (
+          <tbody className="bg-white divide-y divide-gray-200">
+            {filteredMembers.map((member, index) => (
+              <tr key={member.ally_code}>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {index + 1}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {member.player_name}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {member.galactic_power}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {member.ally_code}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <input
+                    type="checkbox"
+                    checked={selectedMembers.includes(member.ally_code)}
+                    onChange={(e) =>
+                      handleCheckboxChange(member.ally_code, e.target.checked)
+                    }
+                  />
+                </td>
+              </tr>
+            ))}
+            <button
+              className={`fixed bottom-4 right-4 py-2 px-4 rounded z-10 ${selectedMembers.length
+                ? "bg-red-500 hover:bg-red-600 text-white"
+                : "bg-indigo-600 hover:bg-indigo-700 text-white"
+                }`}
+              onClick={handleRemoveSelected}
+            >
+              {selectedMembers.length ? "Remover Membros Selecionados" : "Iniciar com Todos"}
+            </button>
+          </tbody>
+        ) : (
+          <tfoot>
+            <tr>
+              <td colSpan={5}>
+                <button onClick={toggleMembersTable} className="w-full py-2" disabled={!filteredMembers.length}>
+                  Expandir Tabela de Membros
+                </button>
               </td>
             </tr>
-          ))}
-        </tbody>
+          </tfoot>
+        )}
       </table>
-      <button
-        className={`fixed bottom-4 right-4 py-2 px-4 rounded z-10 ${selectedMembers.length
-          ? "bg-red-500 hover:bg-red-600 text-white"
-          : "bg-red-200 text-red-500 cursor-not-allowed"
-          }`}
-        onClick={handleRemoveSelected}
-        disabled={!selectedMembers.length}
-      >
-        Remover Membros Selecionados
-      </button>
     </div>
   );
 }

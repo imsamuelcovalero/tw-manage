@@ -2,21 +2,18 @@
 "use client";
 
 import { createContext } from 'react';
-import { IGuild } from '../interfaces/types';
 
 // Interfaces para os dados que serão mantidos no estado global.
-interface IGuildContext {
-  guild: IGuild | null;
+interface ITwManageContext {
+  isMembersTableExpanded: boolean;
+  toggleMembersTable: () => void;
 }
 
-// Se você planeja adicionar mais dados no futuro, simplesmente adicione-os aqui.
-interface ITwManageContext extends IGuildContext {
-  updateGuild: (newGuild: IGuild) => void;
-  // Outras interfaces, exemplo:
-  // members: IMember[];
-  // settings: ISettings;
-}
+const defaultContext: ITwManageContext = {
+  isMembersTableExpanded: false,
+  toggleMembersTable: () => { }
+};
 
-const TwManageContext = createContext<ITwManageContext | undefined>(undefined);
+const TwManageContext = createContext<ITwManageContext>(defaultContext);
 
 export default TwManageContext;

@@ -5,8 +5,6 @@ import { Inter } from 'next/font/google'
 // import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { TwManageProvider } from './providers/TwManageProvider';
-import { IGuild } from './interfaces/types';
-import Page from './page'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -17,15 +15,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  guild = null
 }: {
   children: React.ReactNode
-  guild?: IGuild | null
 }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <TwManageProvider guild={guild}>
+        <TwManageProvider>
           <ToastContainer />
           {children}
         </TwManageProvider>

@@ -1,16 +1,20 @@
 "use client";
 /* File: src/app/components/startButton.tsx */
-import { useState, useEffect } from 'react';
+import { useState, useContext } from 'react';
 import { fetchGuildData } from '../services/guildService';
 import { prepareMembersData } from '../services/memberSevice';
 import { IGuild } from '../interfaces/types';
 import { toast } from 'react-toastify';
 import * as apiService from '../services/apiService';
 import { useRouter } from 'next/navigation';
+import TwManageContext from '../providers/TwManageContext';
 
 function GuildUrlInput({ guild }: { guild: IGuild }) {
   const [inputValue, setInputValue] = useState(guild?.url || "");
   const [isValidUrl, setIsValidUrl] = useState(true);
+
+  const { toggleMembersTable } = useContext(TwManageContext);
+
   const isGuildExisting = Boolean(guild?.url);
 
   const router = useRouter();
@@ -57,6 +61,7 @@ function GuildUrlInput({ guild }: { guild: IGuild }) {
         toast.success(membersResponseData.message);
       }
 
+      toggleMembersTable();
       router.refresh();
     } catch (error: unknown) {
       if (error instanceof Error) {
