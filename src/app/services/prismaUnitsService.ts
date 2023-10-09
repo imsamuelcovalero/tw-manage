@@ -76,14 +76,18 @@ export async function getShipByBaseId(base_id: string): Promise<IShip | null> {
   });
 }
 
-// Função para adicionar uma unidade selecionada
-export async function addSelectedUnit(base_id: string, name: string, type: 'UNIT' | 'SHIP'): Promise<void> {
-  await prisma.selectedUnit.create({
-    data: {
-      base_id,
-      name,
-      type
-    }
+/* Seção de funções para gerenciar as unidades selecionadas */
+
+// Função para adicionar unidades selecionadas (suporta adição única e múltipla)
+export async function addSelectedUnits(units: ISelectedUnit[] | ISelectedUnit): Promise<void> {
+  const unitsArray = Array.isArray(units) ? units : [units];
+
+  await prisma.selectedUnit.createMany({
+    data: unitsArray.map(unit => ({
+      base_id: unit.base_id,
+      name: unit.name,
+      type: unit.type
+    }))
   });
 }
 
@@ -92,11 +96,15 @@ export async function getAllSelectedUnits(): Promise<ISelectedUnit[]> {
   return await prisma.selectedUnit.findMany();
 }
 
-// Função para excluir uma unidade selecionada
-export async function deleteSelectedUnit(base_id: string): Promise<void> {
-  await prisma.selectedUnit.delete({
+// Função para excluir unidades selecionadas (suporta remoção única e múltipla)
+export async function deleteSelectedUnits(base_ids: string[] | string): Promise<void> {
+  const baseIdsArray = Array.isArray(base_ids) ? base_ids : [base_ids];
+
+  await prisma.selectedUnit.deleteMany({
     where: {
-      base_id
+      base_id: {
+        in: baseIdsArray
+      }
     }
   });
 }

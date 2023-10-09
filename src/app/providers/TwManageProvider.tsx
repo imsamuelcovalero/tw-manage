@@ -18,7 +18,6 @@ export const useTwManage = () => {
 
 export const TwManageProvider: React.FC<ITwManageProviderProps> = ({ children }) => {
   const [isMembersTableExpanded, setMembersTableExpanded] = useState(false);
-  console.log('isMembersTableExpanded', isMembersTableExpanded);
 
   const toggleMembersTable = () => {
     setMembersTableExpanded(!isMembersTableExpanded);

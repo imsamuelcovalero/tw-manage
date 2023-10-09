@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { fetchUnitsData, fetchShipsData } from '../services/unitService';
 import { ISelectedUnit } from '../interfaces/types';
 import ReactSelect from 'react-select';
+import { getSelectedUnitsFromLocalStorage, addSelectedUnitsToLocalStorage } from '../helpers/localStorageHelper';
 
 interface ISelectedUnitsDisplayProps {
   selectedUnits: ISelectedUnit[];
@@ -12,11 +13,27 @@ interface ISelectedUnitsDisplayProps {
 function SelectedUnitsDisplay({ selectedUnits }: ISelectedUnitsDisplayProps) {
   const [units, setUnits] = useState<ISelectedUnit[]>([]);
   const [ships, setShips] = useState<ISelectedUnit[]>([]);
-  const [unitsSelected, setUnitsSelected] = useState<ISelectedUnit[]>([]);
-  console.log('unitsSelected', unitsSelected);
+  // const [unitsSelected, setUnitsSelected] = useState<ISelectedUnit[]>([]);
+  // console.log('unitsSelected', unitsSelected);
 
-  const [unitSearchValue, setUnitSearchValue] = useState('');
-  const [shipSearchValue, setShipSearchValue] = useState('');
+  const [localSelectedUnits, setLocalSelectedUnits] = useState<ISelectedUnit[]>([]);
+  console.log('localSelectedUnits', localSelectedUnits);
+
+  // Inicialização na Montagem do Componente
+  useEffect(() => {
+    const initialUnits = getSelectedUnitsFromLocalStorage();
+    if (initialUnits.length === 0) {
+      addSelectedUnitsToLocalStorage(selectedUnits);
+      setLocalSelectedUnits(selectedUnits);
+    } else {
+      setLocalSelectedUnits(initialUnits);
+    }
+  }, []);
+
+  // Atualizações de localSelectedUnits no localStorage
+  useEffect(() => {
+    addSelectedUnitsToLocalStorage(localSelectedUnits);
+  }, [localSelectedUnits]);
 
   function processUnitData(data: any): ISelectedUnit[] {
     return data.map((unit: any) => ({
@@ -54,8 +71,8 @@ function SelectedUnitsDisplay({ selectedUnits }: ISelectedUnitsDisplayProps) {
     const allData = type === 'unit' ? units : ships;
     const selected = allData.find(u => u.base_id === base_id);
 
-    if (selected && !unitsSelected.some(u => u.base_id === selected.base_id)) {
-      setUnitsSelected(prev => [...prev, selected]);
+    if (selected && !localSelectedUnits.some(u => u.base_id === selected.base_id)) {
+      setLocalSelectedUnits(prev => [...prev, selected]);
 
       if (type === 'unit') {
         setUnits(units => units.filter(u => u.base_id !== selected.base_id));
@@ -65,17 +82,8 @@ function SelectedUnitsDisplay({ selectedUnits }: ISelectedUnitsDisplayProps) {
     }
   };
 
-  const availableUnits = units.filter(u => !selectedUnits.some(su => su.base_id === u.base_id));
-  const availableShips = ships.filter(s => !selectedUnits.some(su => su.base_id === s.base_id));
-
-  // Filtrar unidades e navios disponíveis com base na busca
-  const filteredUnits = availableUnits.filter(unit =>
-    unit.name.toLowerCase().includes(unitSearchValue.toLowerCase())
-  );
-
-  const filteredShips = availableShips.filter(ship =>
-    ship.name.toLowerCase().includes(shipSearchValue.toLowerCase())
-  );
+  const availableUnits = units.filter(u => !localSelectedUnits.some(su => su.base_id === u.base_id));
+  const availableShips = ships.filter(s => !localSelectedUnits.some(su => su.base_id === s.base_id));
 
   // Opções para o dropdown de unidades
   const unitOptions = availableUnits.map(unit => ({ value: unit.base_id, label: unit.name }));
@@ -110,7 +118,7 @@ function SelectedUnitsDisplay({ selectedUnits }: ISelectedUnitsDisplayProps) {
       </div>
 
       <div className="selected-units flex flex-wrap gap-2">
-        {selectedUnits.map(unit => (
+        {localSelectedUnits.map(unit => (
           <span key={unit.base_id} className="unit-tag py-1 px-2 bg-blue-200 rounded-full text-sm" title={unit.name}>{unit.name}</span>
         ))}
       </div>
