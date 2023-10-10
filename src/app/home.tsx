@@ -50,7 +50,6 @@ export default async function Home() {
   // const player = await fetchPlayerData(allyCode);
   // console.log('player', player);
 
-
   return (
     <div className="container">
       <h1>Home</h1>

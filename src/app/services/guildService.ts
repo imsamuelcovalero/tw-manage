@@ -22,7 +22,6 @@ export async function fetchGuildData(url: string) {
     // console.log('process.env.NODE_ENV', process.env.NODE_ENV);
     // console.log('process.env.NEXT_PUBLIC_BASE_URL', process.env.NEXT_PUBLIC_BASE_URL);
 
-
     const apiUrl = process.env.NODE_ENV === 'production'
       ? `https://swgoh.gg/api/guild-profile/${guildId}/`
       : `${process.env.NEXT_PUBLIC_BASE_URL}${getGuildApiLink(guildId)}`;

@@ -4,48 +4,48 @@ import { IUnit, IShip, ISelectedUnit } from '../interfaces/types';
 
 const prisma = new PrismaClient();
 
-// Função para fazer upsert na tabela 'Unit'
-export async function upsertUnit(unitData: IUnit): Promise<IUnit> {
-  const existingUnit = await prisma.unit.findUnique({
-    where: {
-      base_id: unitData.base_id
-    }
-  });
+export async function deleteAllUnits(): Promise<void> {
+  await prisma.unit.deleteMany();
+}
 
-  if (existingUnit) {
-    return await prisma.unit.update({
-      where: {
-        id: existingUnit.id
-      },
-      data: unitData
-    });
-  } else {
-    return await prisma.unit.create({
-      data: unitData
+export async function deleteAllShips(): Promise<void> {
+  await prisma.ship.deleteMany();
+}
+
+export async function resetAndUpsertUnits(units: IUnit[]): Promise<void> {
+  await deleteAllUnits();
+  for (const unit of units) {
+    await prisma.unit.create({
+      data: unit
     });
   }
 }
 
-// Função para fazer upsert na tabela 'Ship'
-export async function upsertShip(shipData: IShip): Promise<IShip> {
-  const existingShip = await prisma.ship.findUnique({
-    where: {
-      base_id: shipData.base_id
-    }
-  });
-
-  if (existingShip) {
-    return await prisma.ship.update({
-      where: {
-        id: existingShip.id
-      },
-      data: shipData
-    });
-  } else {
-    return await prisma.ship.create({
-      data: shipData
+export async function resetAndUpsertShips(ships: IShip[]): Promise<void> {
+  await deleteAllShips();
+  for (const ship of ships) {
+    await prisma.ship.create({
+      data: ship
     });
   }
+}
+
+export async function updateUnitRealData(unitData: IUnit): Promise<IUnit> {
+  return await prisma.unit.update({
+    where: {
+      base_id: unitData.base_id
+    },
+    data: unitData
+  });
+}
+
+export async function updateShipRealData(shipData: IShip): Promise<IShip> {
+  return await prisma.ship.update({
+    where: {
+      base_id: shipData.base_id
+    },
+    data: shipData
+  });
 }
 
 // Função para consultar todas as unidades

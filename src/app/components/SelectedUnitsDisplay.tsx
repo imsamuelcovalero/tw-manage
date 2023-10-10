@@ -4,7 +4,9 @@ import { useState, useEffect } from 'react';
 import { fetchUnitsData, fetchShipsData } from '../services/unitService';
 import { ISelectedUnit } from '../interfaces/types';
 import ReactSelect from 'react-select';
-import { getSelectedUnitsFromLocalStorage, addSelectedUnitsToLocalStorage } from '../helpers/localStorageHelper';
+import { getSelectedUnitsFromLocalStorage, addSelectedUnitsToLocalStorage, clearUnitsFromLocalStorage } from '../helpers/localStorageHelper';
+import { useRouter } from 'next/navigation';
+import { finalizeSelectionAction } from '../actions';
 
 interface ISelectedUnitsDisplayProps {
   selectedUnits: ISelectedUnit[];
@@ -13,15 +15,16 @@ interface ISelectedUnitsDisplayProps {
 function SelectedUnitsDisplay({ selectedUnits }: ISelectedUnitsDisplayProps) {
   const [units, setUnits] = useState<ISelectedUnit[]>([]);
   const [ships, setShips] = useState<ISelectedUnit[]>([]);
-  // const [unitsSelected, setUnitsSelected] = useState<ISelectedUnit[]>([]);
-  // console.log('unitsSelected', unitsSelected);
-
-  const [localSelectedUnits, setLocalSelectedUnits] = useState<ISelectedUnit[]>([]);
+  const [localSelectedUnits, setLocalSelectedUnits] = useState<ISelectedUnit[]>(getSelectedUnitsFromLocalStorage());
   console.log('localSelectedUnits', localSelectedUnits);
+
+  const router = useRouter();
 
   // Inicialização na Montagem do Componente
   useEffect(() => {
     const initialUnits = getSelectedUnitsFromLocalStorage();
+    console.log('initialUnits', initialUnits);
+
     if (initialUnits.length === 0) {
       addSelectedUnitsToLocalStorage(selectedUnits);
       setLocalSelectedUnits(selectedUnits);
@@ -32,6 +35,8 @@ function SelectedUnitsDisplay({ selectedUnits }: ISelectedUnitsDisplayProps) {
 
   // Atualizações de localSelectedUnits no localStorage
   useEffect(() => {
+    console.log('localSelectedUnits', localSelectedUnits);
+
     addSelectedUnitsToLocalStorage(localSelectedUnits);
   }, [localSelectedUnits]);
 
@@ -39,7 +44,7 @@ function SelectedUnitsDisplay({ selectedUnits }: ISelectedUnitsDisplayProps) {
     return data.map((unit: any) => ({
       base_id: unit.base_id,
       name: unit.name,
-      type: 'unit'
+      type: 'UNIT'
     }));
   }
 
@@ -47,7 +52,7 @@ function SelectedUnitsDisplay({ selectedUnits }: ISelectedUnitsDisplayProps) {
     return data.map((ship: any) => ({
       base_id: ship.base_id,
       name: ship.name,
-      type: 'ship'
+      type: 'SHIP'
     }));
   }
 
@@ -63,6 +68,15 @@ function SelectedUnitsDisplay({ selectedUnits }: ISelectedUnitsDisplayProps) {
 
     fetchData();
   }, []);
+
+  async function handleFinalizeSelection() {
+    await finalizeSelectionAction(localSelectedUnits);
+    // 3. Apagar os dados do localStorage.
+    clearUnitsFromLocalStorage();
+
+    // 4. Direcionar para a página de exibição das informações das unidades.
+    router.push('/units');  // Sugestão de nome de rota para exibir as informações das unidades.
+  }
 
   const handleSelect = (type: 'unit' | 'ship', selectedOption: any) => {
     if (!selectedOption || !selectedOption.value) return; // Adicione esta verificação
@@ -121,6 +135,19 @@ function SelectedUnitsDisplay({ selectedUnits }: ISelectedUnitsDisplayProps) {
         {localSelectedUnits.map(unit => (
           <span key={unit.base_id} className="unit-tag py-1 px-2 bg-blue-200 rounded-full text-sm" title={unit.name}>{unit.name}</span>
         ))}
+      </div>
+
+      <div className="finalize-selection mt-4">
+        {localSelectedUnits.length > 0 ? (
+          <button
+            onClick={handleFinalizeSelection}
+            className="bg-blue-500 text-white px-4 py-2 rounded shadow"
+          >
+            Concluir Seleção
+          </button>
+        ) : (
+          <p className="text-red-500">Ao menos uma unidade deve ser selecionada.</p>
+        )}
       </div>
     </div>
   );
