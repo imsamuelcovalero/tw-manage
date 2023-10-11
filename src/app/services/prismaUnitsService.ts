@@ -82,6 +82,10 @@ export async function getShipByBaseId(base_id: string): Promise<IShip | null> {
 export async function addSelectedUnits(units: ISelectedUnit[] | ISelectedUnit): Promise<void> {
   const unitsArray = Array.isArray(units) ? units : [units];
 
+  // Primeiro, excluímos todas as unidades selecionadas existentes
+  await deleteAllSelectedUnits();
+
+  // Em seguida, adicionamos as novas unidades selecionadas
   await prisma.selectedUnit.createMany({
     data: unitsArray.map(unit => ({
       base_id: unit.base_id,

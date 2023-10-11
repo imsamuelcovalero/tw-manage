@@ -1,13 +1,17 @@
 'use server';  // usando a funcionalidade 'Server Actions' do Next.js
-/* File: src/app/actions.tsx */
-import { addSelectedUnits, resetAndUpsertUnits, resetAndUpsertShips } from './services/prismaUnitsService';
-import { ISelectedUnit, IUnit, IShip } from './interfaces/types';
+/* File: src/app/actions/finalizeSelectionAction.tsx */
+import { addSelectedUnits, resetAndUpsertUnits, resetAndUpsertShips } from '../services/prismaUnitsService';
+import { ISelectedUnit, IUnit, IShip } from '../interfaces/types';
+import validators from '@/app/api/middlewares/validators';
 
 export async function finalizeSelectionAction(localSelectedUnits: ISelectedUnit[]) {
-  // 1. Gravar localSelectedUnits no banco de dados.
+  // 1. Validar localSelectedUnits
+  validators.validateSelectedUnitsData(localSelectedUnits);
+
+  // 2. Gravar localSelectedUnits no banco de dados.
   await addSelectedUnits(localSelectedUnits);
 
-  // 2. Realizar upsert nas tabelas de unidades.
+  // 3. Realizar upsert nas tabelas de unidades.
   function convertToIUnit(selectedUnit: ISelectedUnit): IUnit {
     return {
       base_id: selectedUnit.base_id,

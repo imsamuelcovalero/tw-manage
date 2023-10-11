@@ -6,7 +6,8 @@ import { ISelectedUnit } from '../interfaces/types';
 import ReactSelect from 'react-select';
 import { getSelectedUnitsFromLocalStorage, addSelectedUnitsToLocalStorage, clearUnitsFromLocalStorage } from '../helpers/localStorageHelper';
 import { useRouter } from 'next/navigation';
-import { finalizeSelectionAction } from '../actions';
+import { finalizeSelectionAction } from '../actions/finalizeSelectionAction';
+import { toast } from 'react-toastify';
 
 interface ISelectedUnitsDisplayProps {
   selectedUnits: ISelectedUnit[];
@@ -70,12 +71,33 @@ function SelectedUnitsDisplay({ selectedUnits }: ISelectedUnitsDisplayProps) {
   }, []);
 
   async function handleFinalizeSelection() {
-    await finalizeSelectionAction(localSelectedUnits);
-    // 3. Apagar os dados do localStorage.
-    clearUnitsFromLocalStorage();
+    try {
+      // 1. Chama a action que realiza a gravação no banco de dados.
+      await finalizeSelectionAction(localSelectedUnits);
 
-    // 4. Direcionar para a página de exibição das informações das unidades.
-    router.push('/units');  // Sugestão de nome de rota para exibir as informações das unidades.
+      // 2. Apaga os dados do localStorage.
+      clearUnitsFromLocalStorage();
+
+      // Mensagem de sucesso
+      toast.success('Unidades selecionadas foram salvas com sucesso!', {
+        autoClose: 3000
+      });
+
+      // Espera um pouco antes de redirecionar, para dar tempo do toast ser visualizado.
+      setTimeout(() => {
+        // 3. Direciona para a página de exibição das informações das unidades.
+        router.push('/units');
+      }, 1000);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(error.message);
+        toast.error(error.message);
+      } else {
+        // Handle any other unknown errors
+        console.error('Ocorreu um erro inesperado:', error);
+        toast.error('Ocorreu um erro inesperado.');
+      }
+    }
   }
 
   const handleSelect = (type: 'unit' | 'ship', selectedOption: any) => {

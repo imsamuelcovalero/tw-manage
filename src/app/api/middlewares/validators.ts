@@ -2,13 +2,13 @@
 import Joi from 'joi';
 import CustomError from '../errors/CustomError';
 
-import { memberSchema, guildSchema, allyCodesSchema } from './joiSchemas';
+import { memberSchema, guildSchema, allyCodesSchema, selectedUnitSchema } from './joiSchemas';
 
-type SchemaName = 'memberSchema' | 'guildSchema' | 'allyCodesSchema';
+type SchemaName = 'memberSchema' | 'guildSchema' | 'allyCodesSchema' | 'selectedUnitSchema';
 
 function validate(schema: Joi.ObjectSchema | Joi.ArraySchema, schemaName: SchemaName) {
   return (data: any) => {
-    // console.log(`validate ${schemaName}`, data);
+    console.log(`validate ${schemaName}`, data);
 
     const { error } = schema.validate(data);
 
@@ -31,6 +31,7 @@ const validators = {
   validateMembersData: validate(memberSchema, 'memberSchema'),
   validateGuildData: validate(guildSchema, 'guildSchema'),
   validateAllyCodesData: validate(allyCodesSchema, 'allyCodesSchema'),
+  validateSelectedUnitsData: validate(selectedUnitSchema, 'selectedUnitSchema'),
 };
 
 export default validators;
