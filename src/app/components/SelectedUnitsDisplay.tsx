@@ -103,6 +103,17 @@ function SelectedUnitsDisplay({ selectedUnits }: ISelectedUnitsDisplayProps) {
     setForceUpdateKey(prevKey => prevKey + 1);
   };
 
+  const handleClearSelection = () => {
+    // Limpar o estado local
+    setLocalSelectedUnits([]);
+
+    // Limpar o localStorage
+    clearUnitsFromLocalStorage();
+
+    // Resetar o forceUpdateKey para forçar a atualização dos componentes ReactSelect
+    setForceUpdateKey(prevKey => prevKey + 1);
+  };
+
   async function handleFinalizeSelection() {
     try {
       // 1. Chama a action que realiza a gravação no banco de dados.
@@ -174,7 +185,19 @@ function SelectedUnitsDisplay({ selectedUnits }: ISelectedUnitsDisplayProps) {
         ))}
       </div>
 
-      <div className="finalize-selection mt-4">
+      <div className="selected-units-actions mt-4 flex justify-between">
+        {/* Botão para Limpar Seleção */}
+        {localSelectedUnits.length > 0 && (
+          <button
+            onClick={handleClearSelection}
+            className="bg-red-500 text-white px-4 py-2 rounded shadow"
+            title="Isso irá limpar todas as unidades selecionadas apenas localmente, sem afetar o banco de dados."
+          >
+            Limpar Seleção
+          </button>
+        )}
+
+        {/* Concluir Seleção (ou mensagem de erro) */}
         {localSelectedUnits.length > 0 ? (
           <button
             onClick={handleFinalizeSelection}
