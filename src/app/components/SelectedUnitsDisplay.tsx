@@ -19,6 +19,10 @@ function SelectedUnitsDisplay({ selectedUnits }: ISelectedUnitsDisplayProps) {
   const [localSelectedUnits, setLocalSelectedUnits] = useState<ISelectedUnit[]>(getSelectedUnitsFromLocalStorage());
   console.log('localSelectedUnits', localSelectedUnits);
 
+  const [selectedUnit, setSelectedUnit] = useState<any>(null);
+  const [selectedShip, setSelectedShip] = useState<any>(null);
+  const [forceUpdateKey, setForceUpdateKey] = useState<number>(0);
+
   const router = useRouter();
 
   // Inicialização na Montagem do Componente
@@ -70,6 +74,35 @@ function SelectedUnitsDisplay({ selectedUnits }: ISelectedUnitsDisplayProps) {
     fetchData();
   }, []);
 
+  // Opções para o dropdown de unidades
+  const unitOptions = units
+    .filter(unit => !localSelectedUnits.some(su => su.base_id === unit.base_id))
+    .map(unit => ({ value: unit.base_id, label: unit.name }));
+
+  // Opções para o dropdown de navios
+  const shipOptions = ships
+    .filter(ship => !localSelectedUnits.some(su => su.base_id === ship.base_id))
+    .map(ship => ({ value: ship.base_id, label: ship.name }));
+
+  const handleSelect = (type: 'unit' | 'ship', selectedOption: any) => {
+    if (!selectedOption || !selectedOption.value) return;
+
+    const base_id = selectedOption.value;
+    const allData = type === 'unit' ? units : ships;
+    const selected = allData.find(u => u.base_id === base_id);
+
+    if (selected && !localSelectedUnits.some(u => u.base_id === selected.base_id)) {
+      setLocalSelectedUnits(prev => [...prev, selected]);
+      setForceUpdateKey(prevKey => prevKey + 1);
+    }
+  };
+
+  // Função para remover uma unidade da lista localSelectedUnits
+  const handleRemoveUnit = (unitToRemove: ISelectedUnit) => {
+    setLocalSelectedUnits(prev => prev.filter(unit => unit.base_id !== unitToRemove.base_id));
+    setForceUpdateKey(prevKey => prevKey + 1);
+  };
+
   async function handleFinalizeSelection() {
     try {
       // 1. Chama a action que realiza a gravação no banco de dados.
@@ -100,33 +133,6 @@ function SelectedUnitsDisplay({ selectedUnits }: ISelectedUnitsDisplayProps) {
     }
   }
 
-  const handleSelect = (type: 'unit' | 'ship', selectedOption: any) => {
-    if (!selectedOption || !selectedOption.value) return; // Adicione esta verificação
-
-    const base_id = selectedOption.value; // Extraia o base_id aqui
-    const allData = type === 'unit' ? units : ships;
-    const selected = allData.find(u => u.base_id === base_id);
-
-    if (selected && !localSelectedUnits.some(u => u.base_id === selected.base_id)) {
-      setLocalSelectedUnits(prev => [...prev, selected]);
-
-      if (type === 'unit') {
-        setUnits(units => units.filter(u => u.base_id !== selected.base_id));
-      } else {
-        setShips(ships => ships.filter(s => s.base_id !== selected.base_id));
-      }
-    }
-  };
-
-  const availableUnits = units.filter(u => !localSelectedUnits.some(su => su.base_id === u.base_id));
-  const availableShips = ships.filter(s => !localSelectedUnits.some(su => su.base_id === s.base_id));
-
-  // Opções para o dropdown de unidades
-  const unitOptions = availableUnits.map(unit => ({ value: unit.base_id, label: unit.name }));
-
-  // Opções para o dropdown de navios
-  const shipOptions = availableShips.map(ship => ({ value: ship.base_id, label: ship.name }));
-
   return (
     <div className="selected-units-section p-6 bg-white shadow-md rounded-lg">
       <h2 className="text-xl font-bold mb-4">Unidades Selecionadas</h2>
@@ -135,27 +141,36 @@ function SelectedUnitsDisplay({ selectedUnits }: ISelectedUnitsDisplayProps) {
         {/* Campo de busca para units */}
         <div className="mb-2 w-full md:w-1/2">
           <ReactSelect
+            key={forceUpdateKey}
             options={unitOptions}
             isSearchable
             placeholder="Selecione uma unidade"
             onChange={(selectedOption) => handleSelect('unit', selectedOption)}
+            value={selectedUnit}
           />
         </div>
 
         {/* Campo de busca para navios */}
         <div className="mb-2 w-full md:w-1/2">
           <ReactSelect
+            key={forceUpdateKey}
             options={shipOptions}
             isSearchable
             placeholder="Selecione um navio"
             onChange={(selectedOption) => handleSelect('ship', selectedOption)}
+            value={selectedShip}
           />
         </div>
       </div>
 
       <div className="selected-units flex flex-wrap gap-2">
         {localSelectedUnits.map(unit => (
-          <span key={unit.base_id} className="unit-tag py-1 px-2 bg-blue-200 rounded-full text-sm" title={unit.name}>{unit.name}</span>
+          <div key={unit.base_id} className="unit-container flex items-center gap-2">
+            <span className="unit-tag py-1 px-2 bg-blue-200 rounded-full text-sm" title={unit.name}>{unit.name}</span>
+            <button onClick={() => handleRemoveUnit(unit)} className="remove-button text-red-500">
+              ×
+            </button>
+          </div>
         ))}
       </div>
 
