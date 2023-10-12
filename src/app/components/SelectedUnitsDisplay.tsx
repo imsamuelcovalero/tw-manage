@@ -17,7 +17,6 @@ function SelectedUnitsDisplay({ selectedUnits }: ISelectedUnitsDisplayProps) {
   const [units, setUnits] = useState<ISelectedUnit[]>([]);
   const [ships, setShips] = useState<ISelectedUnit[]>([]);
   const [localSelectedUnits, setLocalSelectedUnits] = useState<ISelectedUnit[]>(getSelectedUnitsFromLocalStorage());
-  console.log('localSelectedUnits', localSelectedUnits);
 
   const [selectedUnit, setSelectedUnit] = useState<any>(null);
   const [selectedShip, setSelectedShip] = useState<any>(null);
@@ -28,7 +27,6 @@ function SelectedUnitsDisplay({ selectedUnits }: ISelectedUnitsDisplayProps) {
   // Inicialização na Montagem do Componente
   useEffect(() => {
     const initialUnits = getSelectedUnitsFromLocalStorage();
-    console.log('initialUnits', initialUnits);
 
     if (initialUnits.length === 0) {
       addSelectedUnitsToLocalStorage(selectedUnits);
@@ -40,8 +38,6 @@ function SelectedUnitsDisplay({ selectedUnits }: ISelectedUnitsDisplayProps) {
 
   // Atualizações de localSelectedUnits no localStorage
   useEffect(() => {
-    console.log('localSelectedUnits', localSelectedUnits);
-
     addSelectedUnitsToLocalStorage(localSelectedUnits);
   }, [localSelectedUnits]);
 
@@ -176,9 +172,14 @@ function SelectedUnitsDisplay({ selectedUnits }: ISelectedUnitsDisplayProps) {
 
       <div className="selected-units flex flex-wrap gap-2">
         {localSelectedUnits.map(unit => (
-          <div key={unit.base_id} className="unit-container flex items-center gap-2">
-            <span className="unit-tag py-1 px-2 bg-blue-200 rounded-full text-sm" title={unit.name}>{unit.name}</span>
-            <button onClick={() => handleRemoveUnit(unit)} className="remove-button text-red-500">
+          <div key={unit.base_id} className="unit-container flex items-center gap-1 bg-blue-200 rounded-full py-1 px-2 text-sm shadow-sm hover:shadow-md">
+            <span title={unit.name}>{unit.name}</span>
+            <button
+              onClick={() => handleRemoveUnit(unit)}
+              title='Remover Unidade'
+              className="remove-button text-red-500 ml-2 transition duration-300 ease-in-out transform hover:scale-150 hover:border-red-500 p-0.5 rounded-r-full"
+              style={{ cursor: 'pointer', verticalAlign: 'middle', boxSizing: 'border-box' }}
+            >
               ×
             </button>
           </div>
