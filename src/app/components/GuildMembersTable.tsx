@@ -71,13 +71,20 @@ function GuildMembersTable({ members }: IGuildMembersTableProps) {
   return (
     <div className="container">
       <h2>Membros da Guilda</h2>
-      <input
-        type="text"
-        placeholder="Buscar pelo nome do jogador..."
-        value={searchValue}
-        onChange={(e) => setSearchValue(e.target.value)}
-        className="my-2 p-2 border rounded w-full"
-      />
+      {isMembersTableExpanded && (
+        <>
+          <p className="text-sm text-gray-500">
+            Selecione os membros que estão participando do TW.
+          </p>
+          <input
+            type="text"
+            placeholder="Buscar pelo nome do jogador..."
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            className="my-2 p-2 border rounded w-full"
+          />
+        </>
+      )}
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="bg-gray-50">
           <tr>

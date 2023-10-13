@@ -90,6 +90,13 @@ function SelectedUnitsDisplay({ selectedUnits }: ISelectedUnitsDisplayProps) {
     if (selected && !localSelectedUnits.some(u => u.base_id === selected.base_id)) {
       setLocalSelectedUnits(prev => [...prev, selected]);
       setForceUpdateKey(prevKey => prevKey + 1);
+
+      // Atualizando o estado de 'selectedUnit' e 'selectedShip'
+      if (type === 'unit') {
+        setSelectedUnit(null);
+      } else {
+        setSelectedShip(null);
+      }
     }
   };
 
