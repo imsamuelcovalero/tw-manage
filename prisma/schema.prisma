@@ -34,13 +34,25 @@ model Guild {
 }
 
 model Unit {
-  id         Int      @id @default(autoincrement())
-  base_id    String   @unique
-  name       String
-  quantity   Int
-  omicron_count_1 Int
-  omicron_count_2 Int
-  omicron_count_3 Int
+  id               Int                @id @default(autoincrement())
+  base_id          String             @unique
+  name             String
+  quantity         Int
+  omicron_count_1  Int
+  omicron_count_2  Int
+  omicron_count_3  Int
+  omicron1Id       String?
+  omicron2Id       String?
+  omicron3Id       String?
+  omicronPlayers   UnitOmicronPlayers[] // Adicione isso
+}
+
+model UnitOmicronPlayers {
+  id               Int      @id @default(autoincrement())
+  unitId           Int
+  unit             Unit     @relation(fields: [unitId], references: [id]) // Isto define o relacionamento
+  omicronId        String   // This is the omicron ID, e.g., 'specialskill_STARKILLER01'
+  players          String[]
 }
 
 model Ship {

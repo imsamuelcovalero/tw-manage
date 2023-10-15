@@ -12,12 +12,33 @@ export async function deleteAllShips(): Promise<void> {
   await prisma.ship.deleteMany();
 }
 
+// Adaptação da função resetAndUpsertUnits
 export async function resetAndUpsertUnits(units: IUnit[]): Promise<void> {
+  // Primeiro, deletar todas as unidades
   await deleteAllUnits();
+
+  // Agora, para cada unidade, criar um novo registro
   for (const unit of units) {
-    await prisma.unit.create({
-      data: unit
+    const { omicronAbilities, ...unitData } = unit;
+
+    // Criar a unidade no banco de dados e obter o ID da unidade recém-criada
+    const createdUnit = await prisma.unit.create({
+      data: unitData
     });
+
+    // Se existirem habilidades omicron associadas, crie os registros correspondentes
+    if (omicronAbilities && omicronAbilities.length > 0) {
+      // Agora, use uma transação para inserir todas as habilidades omicron associadas de uma vez
+      await prisma.$transaction(
+        omicronAbilities.map(omicron => prisma.unitOmicronPlayers.create({
+          data: {
+            unitId: createdUnit.id,
+            omicronId: omicron.omicronId,
+            players: omicron.players
+          }
+        }))
+      );
+    }
   }
 }
 
@@ -48,9 +69,21 @@ export async function updateShipRealData(shipData: IShip): Promise<IShip> {
   });
 }
 
-// Função para consultar todas as unidades
+// Adaptação da função getAllUnits
 export async function getAllUnits(): Promise<IUnit[]> {
-  return await prisma.unit.findMany();
+  const units = await prisma.unit.findMany({
+    include: {
+      omicronPlayers: true // Isso irá incluir as informações de UnitOmicronPlayers para cada Unit.
+    }
+  });
+
+  return units.map(unit => ({
+    ...unit,
+    omicronAbilities: unit.omicronPlayers.map(omicronPlayer => ({
+      omicronId: omicronPlayer.omicronId,
+      players: omicronPlayer.players
+    }))
+  }));
 }
 
 // Função para consultar todos os navios
@@ -58,13 +91,27 @@ export async function getAllShips(): Promise<IShip[]> {
   return await prisma.ship.findMany();
 }
 
-// Função para consultar uma unidade pelo base_id
+// Adaptação da função getUnitByBaseId
 export async function getUnitByBaseId(base_id: string): Promise<IUnit | null> {
-  return await prisma.unit.findUnique({
+  const unitData = await prisma.unit.findUnique({
     where: {
       base_id: base_id
+    },
+    include: {
+      omicronPlayers: true // Correção do nome do relacionamento
     }
   });
+
+  if (!unitData) return null;
+
+  // Transformando os dados para se ajustar à interface IUnit
+  return {
+    ...unitData,
+    omicronAbilities: unitData.omicronPlayers.map(omicronPlayer => ({
+      omicronId: omicronPlayer.omicronId,
+      players: omicronPlayer.players
+    }))
+  };
 }
 
 // Função para consultar um navio pelo base_id

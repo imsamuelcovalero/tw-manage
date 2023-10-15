@@ -18,7 +18,14 @@ export interface IGuild {
   url: string;
 }
 
-// Representa a base para entidades do jogo (unidades e navios)
+// Interface para representar um omicron
+interface IOmicronAbility {
+  id?: number;
+  omicronId: string; // ID da habilidade Omicron, por exemplo, 'specialskill_STARKILLER01'
+  players: string[];
+}
+
+// Interface para representar uma unidade ou navio
 interface IGameEntity {
   id?: number;
   base_id: string;
@@ -26,11 +33,12 @@ interface IGameEntity {
   quantity: number;
 }
 
-// Unidades herdam propriedades de IGameEntity e adicionam propriedades específicas
+// Unidades herdam propriedades de IGameEntity
 export interface IUnit extends IGameEntity {
   omicron_count_1: number;
   omicron_count_2: number;
   omicron_count_3: number;
+  omicronAbilities?: IOmicronAbility[]; // Lista de habilidades Omicron associadas
 }
 
 // Navios herdam propriedades de IGameEntity

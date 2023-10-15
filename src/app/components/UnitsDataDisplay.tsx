@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
+import { fetchPlayerData } from '../services/playerService';
 import { IMember, ISelectedUnit, IUnit, IShip } from '../interfaces/types';
 
 interface IUnitsDataUpdateProps {
@@ -18,30 +19,48 @@ function UnitsDataDisplay({
   const [shipsData, setShipsData] = useState<IShip[]>([]);
 
   useEffect(() => {
-    // Atualizar os dados das unidades e naves com base nas unidades selecionadas e membros
-    selectedUnits.forEach((selected) => {
-      if (selected.type === 'UNIT') {
-        const unit: IUnit = {
-          id: selected.id,
-          base_id: selected.base_id,
-          name: selected.name,
-          quantity: selected.quantity + members.length,
-          omicron_count_1: selected.omicron_count_1 + members.length,
-          omicron_count_2: selected.omicron_count_2 + members.length,
-          omicron_count_3: selected.omicron_count_3 + members.length,
-        };
-        setUnitsData((prevData) => [...prevData, unit]);
-      } else {
-        const ship: IShip = {
-          id: selected.id,
-          base_id: selected.base_id,
-          name: selected.name,
-          quantity: selected.quantity + members.length,
-        };
-        setShipsData((prevData) => [...prevData, ship]);
+    async function fetchDataForMembers() {
+      for (const member of members) {
+        try {
+          const playerData = await fetchPlayerData(member.ally_code.toString());
+
+          // Process units
+          for (const unit of playerData.units) {
+            if (selectedUnits.some(sUnit => sUnit.base_id === unit.data.base_id)) {
+              if (unit.data.combat_type === 1) { // It's a UNIT
+                const existingUnit = unitsData.find(u => u.base_id === unit.data.base_id);
+                if (existingUnit) {
+                  existingUnit.quantity += 1;
+
+                  const omicronLength = unit.data.omicron_abilities.length;
+                  switch (omicronLength) {
+                    case 1:
+                      existingUnit.omicron_count_1 += 1;
+                      break;
+                    case 2:
+                      existingUnit.omicron_count_2 += 1;
+                      break;
+                    case 3:
+                      existingUnit.omicron_count_3 += 1;
+                      break;
+                  }
+                }
+              } else if (unit.data.combat_type === 2) { // It's a SHIP
+                const existingShip = shipsData.find(s => s.base_id === unit.data.base_id);
+                if (existingShip) {
+                  existingShip.quantity += 1;
+                }
+              }
+            }
+          }
+        } catch (error) {
+          toast.error(`Failed to fetch data for member with allyCode: ${member.ally_code}. ${error.message}`);
+        }
       }
-    });
-  }, [selectedUnits, members]);
+    }
+
+    fetchDataForMembers();
+  }, [members, selectedUnits]);
 
   // Função de atualização para ser usada futuramente
   const handleUpdateData = () => {

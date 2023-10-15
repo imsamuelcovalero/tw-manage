@@ -8,6 +8,7 @@ import { getSelectedUnitsFromLocalStorage, addSelectedUnitsToLocalStorage, clear
 import { useRouter } from 'next/navigation';
 import { finalizeSelectionAction } from '../actions/finalizeSelectionAction';
 import { toast } from 'react-toastify';
+import { fetchPlayerData } from '../services/playerService';
 
 interface ISelectedUnitsDisplayProps {
   selectedUnits: ISelectedUnit[];
@@ -59,6 +60,10 @@ function SelectedUnitsDisplay({ selectedUnits }: ISelectedUnitsDisplayProps) {
 
   useEffect(() => {
     async function fetchData() {
+      // apagar depois
+      const player = await fetchPlayerData("417229579");
+      console.log('player', player.units);
+
       const unitsData = await fetchUnitsData();
       // console.log('unitsData', unitsData);
       const shipsData = await fetchShipsData();
@@ -149,7 +154,7 @@ function SelectedUnitsDisplay({ selectedUnits }: ISelectedUnitsDisplayProps) {
 
   return (
     <div className="selected-units-section p-6 bg-white shadow-md rounded-lg">
-      <h2 className="text-xl font-bold mb-4">Unidades Selecionadas</h2>
+      <h2 className="text-xl font-bold mb-4">Seleção de Unidades</h2>
 
       <div className="dropdowns-section mb-4 flex gap-4 flex-col md:flex-row">
         {/* Campo de busca para units */}

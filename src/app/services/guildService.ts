@@ -1,11 +1,13 @@
 /* File: src/app/services/guildService.ts */
+const BASE_SWGOH_URL = "https://swgoh.gg/api";
+
 export function extractGuildId(url: string): string | null {
   const match = url.match(/\/g\/([^\/]+)\//);
   return match ? match[1] : null;
 }
 
 export function getGuildApiLink(guildId: string) {
-  return `/api/guild?guildId=${guildId}`;
+  return `${BASE_SWGOH_URL}/guild-profile/${guildId}/`;
 }
 
 export async function fetchGuildData(url: string) {

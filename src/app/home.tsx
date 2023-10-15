@@ -55,8 +55,9 @@ export default async function Home() {
       <h1>Home</h1>
       <GuildUrlInput guild={guild} />
       <p>Guild Name: {guild?.name}</p>
+      {/* <p>Player Name: {player?.data.name}</p> */}
       <GuildMembersTable members={members} />
-      <SelectedUnitsDisplay selectedUnits={selectedUnits} />
+      <SelectedUnitsDisplay selectedUnits={selectedUnits} members={members} />
     </div>
   )
 }
