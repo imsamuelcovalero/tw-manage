@@ -9,7 +9,7 @@ import * as apiService from '../services/apiService';
 import { useRouter } from 'next/navigation';
 import TwManageContext from '../providers/TwManageContext';
 
-function GuildUrlInput({ guild }: { guild: IGuild }) {
+function GuildUrlInput({ guild }: { guild?: IGuild }) {
   const [inputValue, setInputValue] = useState(guild?.url || "");
   const [isValidUrl, setIsValidUrl] = useState(true);
 
@@ -42,12 +42,12 @@ function GuildUrlInput({ guild }: { guild: IGuild }) {
       return;
     }
 
-    const data = await fetchGuildData(inputValue);
-    // console.log('data_GI', data);
-    const transformedData = guildData(data.data);
-    // console.log('transformedData', transformedData);
-
     try {
+      const data = await fetchGuildData(inputValue);
+
+      const transformedData = guildData(data.data);
+      // console.log('transformedData', transformedData);
+
       const guildResponseData = await apiService.upsertGuild(transformedData);
 
       // Após ter sucesso em inserir a guilda

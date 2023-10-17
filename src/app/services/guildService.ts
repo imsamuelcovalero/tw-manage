@@ -25,13 +25,11 @@ export async function fetchGuildData(url: string) {
     // console.log('process.env.NEXT_PUBLIC_BASE_URL', process.env.NEXT_PUBLIC_BASE_URL);
 
     const apiUrl = process.env.NODE_ENV === 'production'
-      ? `https://swgoh.gg/api/guild-profile/${guildId}/`
-      : `${process.env.NEXT_PUBLIC_BASE_URL}${getGuildApiLink(guildId)}`;
+      ? getGuildApiLink(guildId)
+      : `${process.env.NEXT_PUBLIC_BASE_URL}/api/guild-profile?guildId=${guildId}`;
     console.log('apiUrl_G', apiUrl);
 
     const response = await fetch(apiUrl, { cache: 'no-store' });
-    // console.log('response', response);
-
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }

@@ -53,7 +53,7 @@ function UnitsDataDisplay({
               }
             }
           }
-        } catch (error) {
+        } catch (error: any) {
           toast.error(`Failed to fetch data for member with allyCode: ${member.ally_code}. ${error.message}`);
         }
       }

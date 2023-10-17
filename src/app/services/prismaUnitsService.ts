@@ -52,12 +52,54 @@ export async function resetAndUpsertShips(ships: IShip[]): Promise<void> {
 }
 
 export async function updateUnitRealData(unitData: IUnit): Promise<IUnit> {
-  return await prisma.unit.update({
+  // Primeiro, atualize os dados básicos da unidade
+  const updatedUnit = await prisma.unit.update({
     where: {
       base_id: unitData.base_id
     },
-    data: unitData
+    data: {
+      quantity: unitData.quantity,
+      omicron_count_1: unitData.omicron_count_1,
+      omicron_count_2: unitData.omicron_count_2,
+      omicron_count_3: unitData.omicron_count_3,
+      // ... qualquer outro campo relevante de IUnit, mas não omicronAbilities
+    }
   });
+
+  // Recupere todos os registros UnitOmicronPlayers associados a essa unidade
+  const existingOmicrons = await prisma.unitOmicronPlayers.findMany({
+    where: {
+      unitId: updatedUnit.id
+    }
+  });
+
+  // Agora, para cada nova habilidade omicron no unitData:
+  for (const omicron of unitData.omicronAbilities || []) {
+    const existingOmicron = existingOmicrons.find(e => e.omicronId === omicron.omicronId);
+
+    if (existingOmicron) {
+      // Atualizar registro existente
+      await prisma.unitOmicronPlayers.update({
+        where: {
+          id: existingOmicron.id
+        },
+        data: {
+          players: omicron.players
+        }
+      });
+    } else {
+      // Criar novo registro
+      await prisma.unitOmicronPlayers.create({
+        data: {
+          unitId: updatedUnit.id,
+          omicronId: omicron.omicronId,
+          players: omicron.players
+        }
+      });
+    }
+  }
+
+  return updatedUnit;
 }
 
 export async function updateShipRealData(shipData: IShip): Promise<IShip> {

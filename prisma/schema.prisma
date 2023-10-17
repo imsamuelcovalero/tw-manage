@@ -66,7 +66,10 @@ model SelectedUnit {
   id         Int      @id @default(autoincrement())
   base_id    String   @unique
   name       String
-  type       UnitType 
+  type       UnitType
+  omicron1Id       String?
+  omicron2Id       String?
+  omicron3Id       String?
 }
 
 enum UnitType {

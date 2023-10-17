@@ -26,7 +26,7 @@ nextApp.prepare().then(() => {
     return `${BASE_API_URL}${endpoint}`;
   }
 
-  app.get('/api/guild', async (req, res) => {
+  app.get('/api/guild-profile', async (req, res) => {
     const guildId = req.query.guildId as string;
     console.log('guildId_S', guildId);
 

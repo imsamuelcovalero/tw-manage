@@ -26,6 +26,24 @@ export async function fetchUnitsData() {
   }
 }
 
+// Crie uma função que busca os dados de uma unidade específica
+export async function fetchUnitData(unitId: number) {
+  try {
+    const apiUrl = process.env.NODE_ENV === 'production'
+      ? `${getUnitsApiLink()}${unitId}`
+      : `${process.env.NEXT_PUBLIC_BASE_URL}/api/units/${unitId}`; // Assumindo que você terá uma rota de API local para unidades
+
+    const response = await fetch(apiUrl, { cache: 'no-store' });
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error: any) {
+    console.error("There was a problem with the fetch operation:", error.message);
+    return null;
+  }
+}
+
 export async function fetchShipsData() {
   try {
     const apiUrl = process.env.NODE_ENV === 'production'
