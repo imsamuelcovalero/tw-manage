@@ -63,6 +63,70 @@ export const selectedUnitSchema = Joi.array().items(
       'string.empty': REQUIRED_FIELD,
       'string.valid': INVALID_UNIT_TYPE,
       'any.required': REQUIRED_FIELD
+    }),
+    omicron1Id: Joi.string().allow(null).optional().messages({
+      'string.empty': REQUIRED_FIELD
+    }),
+    omicron2Id: Joi.string().allow(null).optional().messages({
+      'string.empty': REQUIRED_FIELD
+    }),
+    omicron3Id: Joi.string().allow(null).optional().messages({
+      'string.empty': REQUIRED_FIELD
     })
   })
 );
+
+/* 
+  Aqui começam os schemas de unidade e navio.
+*/
+const omicronAbilitySchema = Joi.object({
+  id: Joi.number().optional().messages({
+    'number.base': INVALID_VALUE
+  }),
+  omicronId: Joi.string().required().messages({
+    'string.empty': REQUIRED_FIELD,
+    'any.required': REQUIRED_FIELD
+  }),
+  players: Joi.array().items(Joi.string()).required().messages({
+    'array.base': INVALID_VALUE,
+    'any.required': REQUIRED_FIELD
+  })
+});
+
+const gameEntitySchema = Joi.object({
+  id: Joi.number().optional().messages({
+    'number.base': INVALID_VALUE
+  }),
+  base_id: Joi.string().required().messages({
+    'string.empty': REQUIRED_FIELD,
+    'any.required': REQUIRED_FIELD
+  }),
+  name: Joi.string().required().messages({
+    'string.empty': REQUIRED_FIELD,
+    'any.required': REQUIRED_FIELD
+  }),
+  quantity: Joi.number().required().messages({
+    'number.base': INVALID_VALUE,
+    'any.required': REQUIRED_FIELD
+  })
+});
+
+export const unitDataSchema = Joi.array().items(
+  gameEntitySchema.keys({
+    omicron_count_1: Joi.number().required().messages({
+      'number.base': INVALID_VALUE,
+      'any.required': REQUIRED_FIELD
+    }),
+    omicron_count_2: Joi.number().required().messages({
+      'number.base': INVALID_VALUE,
+      'any.required': REQUIRED_FIELD
+    }),
+    omicron_count_3: Joi.number().required().messages({
+      'number.base': INVALID_VALUE,
+      'any.required': REQUIRED_FIELD
+    }),
+    omicronAbilities: Joi.array().items(omicronAbilitySchema).optional()
+  })
+);
+
+export const shipDataSchema = Joi.array().items(gameEntitySchema);

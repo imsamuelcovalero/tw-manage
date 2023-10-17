@@ -54,7 +54,7 @@ nextApp.prepare().then(() => {
 
   app.get('/api/player', async (req, res) => {
     const allyCode = req.query.allyCode as string;
-    console.log('allyCode', allyCode);
+    // console.log('allyCode', allyCode);
 
 
     if (!allyCode) {

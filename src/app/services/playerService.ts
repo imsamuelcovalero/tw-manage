@@ -11,7 +11,7 @@ export async function fetchPlayerData(allyCode: string) {
     const apiUrl = process.env.NODE_ENV === 'production'
       ? getPlayerApiLink(allyCode)
       : `${process.env.NEXT_PUBLIC_BASE_URL}/api/player?allyCode=${allyCode}`;
-    console.log('apiUrl_P', apiUrl);
+    // console.log('apiUrl_P', apiUrl);
 
     const response = await fetch(apiUrl, { cache: 'no-store' });
 

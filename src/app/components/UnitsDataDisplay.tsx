@@ -69,8 +69,7 @@ function UnitsDataDisplay({
 
   return (
     <div className="units-data-update p-6 bg-white shadow-md rounded-lg">
-      <h2 className="text-xl font-bold mb-4">Atualizar Dados das Unidades e Naves</h2>
-
+      <h1 className="text-xl font-bold mb-4">Dados das Unidades e Naves</h1>
       {/* Exibição das tabelas */}
       <table className="mb-4 w-full">
         <thead>
@@ -111,10 +110,6 @@ function UnitsDataDisplay({
           ))}
         </tbody>
       </table>
-
-      <button onClick={handleUpdateData} className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
-        Atualizar Dados
-      </button>
     </div >
   );
 }

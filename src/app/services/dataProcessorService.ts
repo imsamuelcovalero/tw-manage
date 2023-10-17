@@ -6,8 +6,8 @@ import { fetchPlayerData } from "./playerService";
 const UNIT_COMBAT_TYPE = 1;
 const SHIP_COMBAT_TYPE = 2;
 
-export function shipDataProcessorService(localSelectedShips: ISelectedUnit[], members: IMember[]): Promise<IShip[]> {
-  const shipsData: IShip[] = initializeShipsData(localSelectedShips);
+export function shipDataProcessorService(selectedShips: ISelectedUnit[], members: IMember[]): Promise<IShip[]> {
+  const shipsData: IShip[] = initializeShipsData(selectedShips);
 
   return new Promise(async (resolve, reject) => {
     for (const member of members)
@@ -15,7 +15,7 @@ export function shipDataProcessorService(localSelectedShips: ISelectedUnit[], me
         const playerData = await fetchPlayerData(member.ally_code.toString());
 
         for (const unit of playerData.units) {
-          if (localSelectedShips.some(sShip => sShip.base_id === unit.data.base_id)) {
+          if (selectedShips.some(sShip => sShip.base_id === unit.data.base_id)) {
             if (unit.data.combat_type === SHIP_COMBAT_TYPE) { // It's a SHIP
               const existingShip = shipsData.find(s => s.base_id === unit.data.base_id);
               if (existingShip) {
@@ -33,16 +33,16 @@ export function shipDataProcessorService(localSelectedShips: ISelectedUnit[], me
   });
 }
 
-function initializeShipsData(localSelectedShips: ISelectedUnit[]): IShip[] {
-  return localSelectedShips.map(ship => ({
+function initializeShipsData(selectedShips: ISelectedUnit[]): IShip[] {
+  return selectedShips.map(ship => ({
     base_id: ship.base_id,
     name: ship.name,
     quantity: 0
   }));
 }
 
-export function unitDataProcessorService(localSelectedUnits: ISelectedUnit[], members: IMember[]): Promise<IUnit[]> {
-  const unitsData: IUnit[] = initializeUnitsData(localSelectedUnits);
+export function unitDataProcessorService(selectedUnits: ISelectedUnit[], members: IMember[]): Promise<IUnit[]> {
+  const unitsData: IUnit[] = initializeUnitsData(selectedUnits);
 
   return new Promise(async (resolve, reject) => {
     for (const member of members)
@@ -50,7 +50,7 @@ export function unitDataProcessorService(localSelectedUnits: ISelectedUnit[], me
         const playerData = await fetchPlayerData(member.ally_code.toString());
 
         for (const unit of playerData.units) {
-          if (localSelectedUnits.some(sUnit => sUnit.base_id === unit.data.base_id)) {
+          if (selectedUnits.some(sUnit => sUnit.base_id === unit.data.base_id)) {
             const existingUnit = unitsData.find(u => u.base_id === unit.data.base_id);
 
             if (unit.data.combat_type === UNIT_COMBAT_TYPE) { // It's a UNIT
@@ -88,8 +88,8 @@ export function unitDataProcessorService(localSelectedUnits: ISelectedUnit[], me
   });
 }
 
-function initializeUnitsData(localSelectedUnits: ISelectedUnit[]): IUnit[] {
-  return localSelectedUnits.map(unit => ({
+function initializeUnitsData(selectedUnits: ISelectedUnit[]): IUnit[] {
+  return selectedUnits.map(unit => ({
     base_id: unit.base_id,
     name: unit.name,
     quantity: 0,
@@ -101,6 +101,8 @@ function initializeUnitsData(localSelectedUnits: ISelectedUnit[]): IUnit[] {
 }
 
 function initializeOmicronAbilities(unit: ISelectedUnit): IOmicronAbility[] {
+  console.log('unit', unit);
+
   const omicronAbilities: IOmicronAbility[] = [];
 
   if (unit.omicron1Id) {

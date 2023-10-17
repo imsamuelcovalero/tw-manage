@@ -50,7 +50,7 @@ export interface ISelectedUnit {
   base_id: string;
   name: string;
   type: 'UNIT' | 'SHIP';
-  omicron1Id?: string;
-  omicron2Id?: string;
-  omicron3Id?: string;
+  omicron1Id?: string | null;
+  omicron2Id?: string | null;
+  omicron3Id?: string | null;
 }

@@ -50,6 +50,7 @@ function SelectedUnitsDisplay({ selectedUnits, members }: ISelectedUnitsDisplayP
   function processUnitData(data: any): ISelectedUnit[] {
     return data.map((unit: any) => {
       const omicronIds = unit.omicron_ability_ids || [];
+
       return {
         base_id: unit.base_id,
         name: unit.name,
@@ -75,8 +76,8 @@ function SelectedUnitsDisplay({ selectedUnits, members }: ISelectedUnitsDisplayP
   useEffect(() => {
     async function fetchData() {
       // apagar depois
-      const player = await fetchPlayerData("417229579");
-      console.log('player', player.units);
+      // const player = await fetchPlayerData("417229579");
+      // console.log('player', player.units);
 
       const unitsData = await fetchUnitsData();
       // console.log('unitsData', unitsData);
@@ -105,6 +106,8 @@ function SelectedUnitsDisplay({ selectedUnits, members }: ISelectedUnitsDisplayP
     const base_id = selectedOption.value;
     const allData = type === 'unit' ? units : ships;
     const selected = allData.find(u => u.base_id === base_id);
+    // console.log('selected', selected);
+
 
     if (selected && !localSelectedUnits.some(u => u.base_id === selected.base_id)) {
       setLocalSelectedUnits(prev => [...prev, selected]);
@@ -138,14 +141,21 @@ function SelectedUnitsDisplay({ selectedUnits, members }: ISelectedUnitsDisplayP
 
   async function handleFinalizeSelection() {
     try {
-      // 1. Chama o serviço que faz as interações necessárias para obter os dados apropriados para a gravação no banco de dados.
-      const unitsData = unitDataProcessorService(localSelectedUnits, members);
-      const shipsData = shipDataProcessorService(localSelectedUnits, members);
+      // 1. Filtra as unidades selecionadas para obter apenas as unidades (type === 'UNIT') e apenas os navios (type === 'SHIP').
+      const selectedUnitsOnly = localSelectedUnits.filter(unit => unit.type === 'UNIT');
+      const selectedShipsOnly = localSelectedUnits.filter(unit => unit.type === 'SHIP');
 
-      // 2. Chama a action que realiza a gravação no banco de dados.
-      await finalizeSelectionAction(unitsData, shipsData);
+      // 2. Chama o serviço que faz as interações necessárias para obter os dados apropriados para a gravação no banco de dados.
+      const unitsData = await unitDataProcessorService(selectedUnitsOnly, members);
+      console.log('unitsData', unitsData);
 
-      // 3. Apaga os dados do localStorage.
+      const shipsData = await shipDataProcessorService(selectedShipsOnly, members);
+      console.log('shipsData', shipsData);
+
+      // 3. Chama a action que realiza a gravação no banco de dados.
+      await finalizeSelectionAction(localSelectedUnits, unitsData, shipsData);
+
+      // 4. Apaga os dados do localStorage.
       clearUnitsFromLocalStorage();
 
       // Mensagem de sucesso
