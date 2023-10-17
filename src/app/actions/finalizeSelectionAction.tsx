@@ -35,12 +35,6 @@ export async function finalizeSelectionAction(localSelectedUnits: ISelectedUnit[
   // 2. Gravar localSelectedUnits no banco de dados.
   await addSelectedUnits(localSelectedUnits);
 
-  // Experimental: Busca os dados das unidades do SWGOH.gg
-  const unitsFromApi = await fetchUnitsData();
-
-  // Crie uma consulta ao endpoint do SWGOH.gg que busca por uma unidade específica
-  const unitFromApi = await fetchUnitsData();
-
   // 3. Realizar upsert nas tabelas de unidades.
   function convertToIUnit(selectedUnit: ISelectedUnit): IUnit {
     return {

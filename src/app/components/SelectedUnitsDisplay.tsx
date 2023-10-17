@@ -10,6 +10,7 @@ import { finalizeSelectionAction } from '../actions/finalizeSelectionAction';
 import { toast } from 'react-toastify';
 import { fetchPlayerData } from '../services/playerService';
 import TwManageContext from '../providers/TwManageContext';
+import { unitDataProcessorService, shipDataProcessorService } from '../services/dataProcessorService';
 
 interface ISelectedUnitsDisplayProps {
   selectedUnits: ISelectedUnit[];
@@ -137,10 +138,14 @@ function SelectedUnitsDisplay({ selectedUnits, members }: ISelectedUnitsDisplayP
 
   async function handleFinalizeSelection() {
     try {
-      // 1. Chama a action que realiza a gravação no banco de dados.
-      await finalizeSelectionAction(localSelectedUnits, members);
+      // 1. Chama o serviço que faz as interações necessárias para obter os dados apropriados para a gravação no banco de dados.
+      const unitsData = unitDataProcessorService(localSelectedUnits, members);
+      const shipsData = shipDataProcessorService(localSelectedUnits, members);
 
-      // 2. Apaga os dados do localStorage.
+      // 2. Chama a action que realiza a gravação no banco de dados.
+      await finalizeSelectionAction(unitsData, shipsData);
+
+      // 3. Apaga os dados do localStorage.
       clearUnitsFromLocalStorage();
 
       // Mensagem de sucesso
@@ -150,7 +155,7 @@ function SelectedUnitsDisplay({ selectedUnits, members }: ISelectedUnitsDisplayP
 
       // Espera um pouco antes de redirecionar, para dar tempo do toast ser visualizado.
       setTimeout(() => {
-        // 3. Direciona para a página de exibição das informações das unidades.
+        // 4. Direciona para a página de exibição das informações das unidades.
         router.push('/units');
       }, 1000);
     } catch (error: unknown) {

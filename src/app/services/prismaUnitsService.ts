@@ -12,6 +12,10 @@ export async function deleteAllShips(): Promise<void> {
   await prisma.ship.deleteMany();
 }
 
+export async function deleteAllUnitOmicronPlayers(): Promise<void> {
+  await prisma.unitOmicronPlayers.deleteMany();
+}
+
 // Adaptação da função resetAndUpsertUnits
 export async function resetAndUpsertUnits(units: IUnit[]): Promise<void> {
   // Primeiro, deletar todas as unidades
@@ -28,6 +32,9 @@ export async function resetAndUpsertUnits(units: IUnit[]): Promise<void> {
 
     // Se existirem habilidades omicron associadas, crie os registros correspondentes
     if (omicronAbilities && omicronAbilities.length > 0) {
+      // Primeiro, exclua todos os registros UnitOmicronPlayers existentes
+      await deleteAllUnitOmicronPlayers();
+
       // Agora, use uma transação para inserir todas as habilidades omicron associadas de uma vez
       await prisma.$transaction(
         omicronAbilities.map(omicron => prisma.unitOmicronPlayers.create({

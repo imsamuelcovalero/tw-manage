@@ -7,60 +7,60 @@ import { fetchPlayerData } from '../services/playerService';
 import { IMember, ISelectedUnit, IUnit, IShip } from '../interfaces/types';
 
 interface IUnitsDataUpdateProps {
-  selectedUnits: ISelectedUnit[];
-  members: IMember[];
+  unitsData: IUnit[];
+  shipsData: IShip[];
 }
 
 function UnitsDataDisplay({
-  selectedUnits,
-  members
+  unitsData,
+  shipsData
 }: IUnitsDataUpdateProps) {
-  const [unitsData, setUnitsData] = useState<IUnit[]>([]);
-  const [shipsData, setShipsData] = useState<IShip[]>([]);
+  // const [unitsData, setUnitsData] = useState<IUnit[]>([]);
+  // const [shipsData, setShipsData] = useState<IShip[]>([]);
 
-  useEffect(() => {
-    async function fetchDataForMembers() {
-      for (const member of members) {
-        try {
-          const playerData = await fetchPlayerData(member.ally_code.toString());
+  // useEffect(() => {
+  //   async function fetchDataForMembers() {
+  //     for (const member of members) {
+  //       try {
+  //         const playerData = await fetchPlayerData(member.ally_code.toString());
 
-          // Process units
-          for (const unit of playerData.units) {
-            if (selectedUnits.some(sUnit => sUnit.base_id === unit.data.base_id)) {
-              if (unit.data.combat_type === 1) { // It's a UNIT
-                const existingUnit = unitsData.find(u => u.base_id === unit.data.base_id);
-                if (existingUnit) {
-                  existingUnit.quantity += 1;
+  //         // Process units
+  //         for (const unit of playerData.units) {
+  //           if (selectedUnits.some(sUnit => sUnit.base_id === unit.data.base_id)) {
+  //             if (unit.data.combat_type === 1) { // It's a UNIT
+  //               const existingUnit = unitsData.find(u => u.base_id === unit.data.base_id);
+  //               if (existingUnit) {
+  //                 existingUnit.quantity += 1;
 
-                  const omicronLength = unit.data.omicron_abilities.length;
-                  switch (omicronLength) {
-                    case 1:
-                      existingUnit.omicron_count_1 += 1;
-                      break;
-                    case 2:
-                      existingUnit.omicron_count_2 += 1;
-                      break;
-                    case 3:
-                      existingUnit.omicron_count_3 += 1;
-                      break;
-                  }
-                }
-              } else if (unit.data.combat_type === 2) { // It's a SHIP
-                const existingShip = shipsData.find(s => s.base_id === unit.data.base_id);
-                if (existingShip) {
-                  existingShip.quantity += 1;
-                }
-              }
-            }
-          }
-        } catch (error: any) {
-          toast.error(`Failed to fetch data for member with allyCode: ${member.ally_code}. ${error.message}`);
-        }
-      }
-    }
+  //                 const omicronLength = unit.data.omicron_abilities.length;
+  //                 switch (omicronLength) {
+  //                   case 1:
+  //                     existingUnit.omicron_count_1 += 1;
+  //                     break;
+  //                   case 2:
+  //                     existingUnit.omicron_count_2 += 1;
+  //                     break;
+  //                   case 3:
+  //                     existingUnit.omicron_count_3 += 1;
+  //                     break;
+  //                 }
+  //               }
+  //             } else if (unit.data.combat_type === 2) { // It's a SHIP
+  //               const existingShip = shipsData.find(s => s.base_id === unit.data.base_id);
+  //               if (existingShip) {
+  //                 existingShip.quantity += 1;
+  //               }
+  //             }
+  //           }
+  //         }
+  //       } catch (error: any) {
+  //         toast.error(`Failed to fetch data for member with allyCode: ${member.ally_code}. ${error.message}`);
+  //       }
+  //     }
+  //   }
 
-    fetchDataForMembers();
-  }, [members, selectedUnits]);
+  //   fetchDataForMembers();
+  // }, [members, selectedUnits]);
 
   // Função de atualização para ser usada futuramente
   const handleUpdateData = () => {

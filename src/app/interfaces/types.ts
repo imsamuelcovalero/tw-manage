@@ -19,7 +19,7 @@ export interface IGuild {
 }
 
 // Interface para representar um omicron
-interface IOmicronAbility {
+export interface IOmicronAbility {
   id?: number;
   omicronId: string; // ID da habilidade Omicron, por exemplo, 'specialskill_STARKILLER01'
   players: string[];
