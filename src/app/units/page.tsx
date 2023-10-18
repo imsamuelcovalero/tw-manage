@@ -3,12 +3,12 @@ import { getAllSelectedUnits, getAllUnits, getAllShips } from '../services/prism
 import UnitsDataDisplay from '../components/UnitsDataDisplay';
 
 export default async function Page() {
-  const selectedUnits = await getAllSelectedUnits();
+  // const selectedUnits = await getAllSelectedUnits();
 
-  if (!selectedUnits) {
-    console.log('Units not found');
-    return;
-  }
+  // if (!selectedUnits) {
+  //   console.log('Units not found');
+  //   return;
+  // }
 
   // const members = await getMembers();
 

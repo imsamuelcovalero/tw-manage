@@ -38,7 +38,10 @@ export interface IUnit extends IGameEntity {
   omicron_count_1: number;
   omicron_count_2: number;
   omicron_count_3: number;
-  omicronAbilities?: IOmicronAbility[]; // Lista de habilidades Omicron associadas
+  omicron1Id?: string | null;
+  omicron2Id?: string | null;
+  omicron3Id?: string | null;
+  omicronPlayers?: IOmicronAbility[]; // Lista de habilidades Omicron associadas
 }
 
 // Navios herdam propriedades de IGameEntity

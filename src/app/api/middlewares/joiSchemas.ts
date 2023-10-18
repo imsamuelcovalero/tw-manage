@@ -125,7 +125,16 @@ export const unitDataSchema = Joi.array().items(
       'number.base': INVALID_VALUE,
       'any.required': REQUIRED_FIELD
     }),
-    omicronAbilities: Joi.array().items(omicronAbilitySchema).optional()
+    omicron1Id: Joi.string().allow(null).optional().messages({
+      'string.empty': REQUIRED_FIELD
+    }),
+    omicron2Id: Joi.string().allow(null).optional().messages({
+      'string.empty': REQUIRED_FIELD
+    }),
+    omicron3Id: Joi.string().allow(null).optional().messages({
+      'string.empty': REQUIRED_FIELD
+    }),
+    omicronPlayers: Joi.array().items(omicronAbilitySchema).optional()
   })
 );
 

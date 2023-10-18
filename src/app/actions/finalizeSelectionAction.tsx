@@ -9,6 +9,9 @@ export async function finalizeSelectionAction(
   unitsData: IUnit[],
   shipsData: IShip[]
 ) {
+  // console.log('selectedUnitsX', selectedUnits);
+  // console.log('unitsData', unitsData);
+
   // 1. Validar os dados de entrada
   validators.validateSelectedUnitsData(selectedUnits);
   validators.validateUnitsData(unitsData);

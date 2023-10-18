@@ -8,7 +8,7 @@ import { getSelectedUnitsFromLocalStorage, addSelectedUnitsToLocalStorage, clear
 import { useRouter } from 'next/navigation';
 import { finalizeSelectionAction } from '../actions/finalizeSelectionAction';
 import { toast } from 'react-toastify';
-import { fetchPlayerData } from '../services/playerService';
+// import { fetchPlayerData } from '../services/playerService';
 import TwManageContext from '../providers/TwManageContext';
 import { unitDataProcessorService, shipDataProcessorService } from '../services/dataProcessorService';
 
@@ -142,15 +142,19 @@ function SelectedUnitsDisplay({ selectedUnits, members }: ISelectedUnitsDisplayP
   async function handleFinalizeSelection() {
     try {
       // 1. Filtra as unidades selecionadas para obter apenas as unidades (type === 'UNIT') e apenas os navios (type === 'SHIP').
+      // console.log('localSelectedUnits', localSelectedUnits);
+
       const selectedUnitsOnly = localSelectedUnits.filter(unit => unit.type === 'UNIT');
+      // console.log('selectedUnitsOnly', selectedUnitsOnly);
+
       const selectedShipsOnly = localSelectedUnits.filter(unit => unit.type === 'SHIP');
 
       // 2. Chama o serviço que faz as interações necessárias para obter os dados apropriados para a gravação no banco de dados.
       const unitsData = await unitDataProcessorService(selectedUnitsOnly, members);
-      console.log('unitsData', unitsData);
+      // console.log('unitsDataX', unitsData);
 
       const shipsData = await shipDataProcessorService(selectedShipsOnly, members);
-      console.log('shipsData', shipsData);
+      // console.log('shipsData', shipsData);
 
       // 3. Chama a action que realiza a gravação no banco de dados.
       await finalizeSelectionAction(localSelectedUnits, unitsData, shipsData);

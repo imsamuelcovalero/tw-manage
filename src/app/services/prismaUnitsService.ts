@@ -5,6 +5,8 @@ import { IUnit, IShip, ISelectedUnit } from '../interfaces/types';
 const prisma = new PrismaClient();
 
 export async function deleteAllUnits(): Promise<void> {
+  // Primeiro exclui todos os registros UnitOmicronPlayers associados e depois exclui todas as unidades
+  await deleteAllUnitOmicronPlayers();
   await prisma.unit.deleteMany();
 }
 
@@ -23,21 +25,21 @@ export async function resetAndUpsertUnits(units: IUnit[]): Promise<void> {
 
   // Agora, para cada unidade, criar um novo registro
   for (const unit of units) {
-    const { omicronAbilities, ...unitData } = unit;
+    const { omicronPlayers, ...unitData } = unit;
 
     // Criar a unidade no banco de dados e obter o ID da unidade recém-criada
     const createdUnit = await prisma.unit.create({
       data: unitData
     });
+    console.log('createdUnit', createdUnit);
+
 
     // Se existirem habilidades omicron associadas, crie os registros correspondentes
-    if (omicronAbilities && omicronAbilities.length > 0) {
-      // Primeiro, exclua todos os registros UnitOmicronPlayers existentes
-      await deleteAllUnitOmicronPlayers();
+    if (omicronPlayers && omicronPlayers.length > 0) {
 
       // Agora, use uma transação para inserir todas as habilidades omicron associadas de uma vez
       await prisma.$transaction(
-        omicronAbilities.map(omicron => prisma.unitOmicronPlayers.create({
+        omicronPlayers.map(omicron => prisma.unitOmicronPlayers.create({
           data: {
             unitId: createdUnit.id,
             omicronId: omicron.omicronId,
@@ -69,7 +71,7 @@ export async function updateUnitRealData(unitData: IUnit): Promise<IUnit> {
       omicron_count_1: unitData.omicron_count_1,
       omicron_count_2: unitData.omicron_count_2,
       omicron_count_3: unitData.omicron_count_3,
-      // ... qualquer outro campo relevante de IUnit, mas não omicronAbilities
+      // ... qualquer outro campo relevante de IUnit, mas não omicronPlayers
     }
   });
 
@@ -81,7 +83,7 @@ export async function updateUnitRealData(unitData: IUnit): Promise<IUnit> {
   });
 
   // Agora, para cada nova habilidade omicron no unitData:
-  for (const omicron of unitData.omicronAbilities || []) {
+  for (const omicron of unitData.omicronPlayers || []) {
     const existingOmicron = existingOmicrons.find(e => e.omicronId === omicron.omicronId);
 
     if (existingOmicron) {
@@ -126,13 +128,15 @@ export async function getAllUnits(): Promise<IUnit[]> {
     }
   });
 
-  return units.map(unit => ({
-    ...unit,
-    omicronAbilities: unit.omicronPlayers.map(omicronPlayer => ({
-      omicronId: omicronPlayer.omicronId,
-      players: omicronPlayer.players
-    }))
-  }));
+  return units;
+
+  // return units.map(unit => ({
+  //   ...unit,
+  //   omicronAbilities: unit.omicronPlayers.map(omicronPlayer => ({
+  //     omicronId: omicronPlayer.omicronId,
+  //     players: omicronPlayer.players
+  //   }))
+  // }));
 }
 
 // Função para consultar todos os navios
@@ -156,7 +160,7 @@ export async function getUnitByBaseId(base_id: string): Promise<IUnit | null> {
   // Transformando os dados para se ajustar à interface IUnit
   return {
     ...unitData,
-    omicronAbilities: unitData.omicronPlayers.map(omicronPlayer => ({
+    omicronPlayers: unitData.omicronPlayers.map(omicronPlayer => ({
       omicronId: omicronPlayer.omicronId,
       players: omicronPlayer.players
     }))
@@ -186,7 +190,10 @@ export async function addSelectedUnits(units: ISelectedUnit[] | ISelectedUnit): 
     data: unitsArray.map(unit => ({
       base_id: unit.base_id,
       name: unit.name,
-      type: unit.type
+      type: unit.type,
+      omicron1Id: unit.omicron1Id,
+      omicron2Id: unit.omicron2Id,
+      omicron3Id: unit.omicron3Id
     }))
   });
 }

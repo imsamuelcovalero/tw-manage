@@ -57,9 +57,9 @@ export function unitDataProcessorService(selectedUnits: ISelectedUnit[], members
               if (existingUnit) {
                 existingUnit.quantity += 1;
 
-                const omicronAbilities = unit.data.omicron_abilities;
+                const omicronPlayers = unit.data.omicron_abilities;
 
-                omicronAbilities.forEach((omicronId: string, index: number) => {
+                omicronPlayers.forEach((omicronId: string, index: number) => {
                   switch (index) {
                     case 0:
                       existingUnit.omicron_count_1 += 1;
@@ -96,42 +96,47 @@ function initializeUnitsData(selectedUnits: ISelectedUnit[]): IUnit[] {
     omicron_count_1: 0,
     omicron_count_2: 0,
     omicron_count_3: 0,
-    omicronAbilities: initializeOmicronAbilities(unit)
+    omicron1Id: unit.omicron1Id,
+    omicron2Id: unit.omicron2Id,
+    omicron3Id: unit.omicron3Id,
+    omicronPlayers: initializeOmicronPlayers(unit)
   }));
 }
 
-function initializeOmicronAbilities(unit: ISelectedUnit): IOmicronAbility[] {
-  console.log('unit', unit);
+function initializeOmicronPlayers(unit: ISelectedUnit): IOmicronAbility[] {
+  // console.log('unit', unit);
 
-  const omicronAbilities: IOmicronAbility[] = [];
+  const omicronPlayers: IOmicronAbility[] = [];
 
   if (unit.omicron1Id) {
-    omicronAbilities.push({
+    omicronPlayers.push({
       omicronId: unit.omicron1Id,
       players: []
     });
   }
 
   if (unit.omicron2Id) {
-    omicronAbilities.push({
+    omicronPlayers.push({
       omicronId: unit.omicron2Id,
       players: []
     });
   }
 
   if (unit.omicron3Id) {
-    omicronAbilities.push({
+    omicronPlayers.push({
       omicronId: unit.omicron3Id,
       players: []
     });
   }
 
-  return omicronAbilities;
+  // console.log('omicronPlayers', omicronPlayers);
+
+  return omicronPlayers;
 }
 
 function updateOmicronPlayers(unit: IUnit, omicronId: string, playerName: string) {
   // Encontre a habilidade omicron com base no ID fornecido
-  const omicronAbility = unit.omicronAbilities?.find(omicron => omicron.omicronId === omicronId);
+  const omicronAbility = unit.omicronPlayers?.find(omicron => omicron.omicronId === omicronId);
 
   // Se encontrarmos a habilidade Omicron e o nome do jogador ainda não estiver listado, adicionamos o nome
   if (omicronAbility && !omicronAbility.players.includes(playerName)) {
