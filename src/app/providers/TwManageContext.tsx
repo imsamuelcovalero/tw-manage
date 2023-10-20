@@ -11,7 +11,7 @@ interface ITwManageContext {
 
 const defaultContext: ITwManageContext = {
   isMembersTableExpanded: false,
-  toggleMembersTable: () => { }
+  toggleMembersTable: () => { },
 };
 
 const TwManageContext = createContext<ITwManageContext>(defaultContext);

@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import * as apiService from '../services/apiService';
 import { useRouter } from 'next/navigation';
 import TwManageContext from '../providers/TwManageContext';
+import { setInteractionStateInLocalStorage } from '../helpers/localStorageHelper';
 
 function GuildUrlInput({ guild }: { guild?: IGuild }) {
   const [inputValue, setInputValue] = useState(guild?.url || "");
@@ -62,6 +63,7 @@ function GuildUrlInput({ guild }: { guild?: IGuild }) {
       }
 
       toggleMembersTable();
+      setInteractionStateInLocalStorage(true)
       router.refresh();
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -76,8 +78,11 @@ function GuildUrlInput({ guild }: { guild?: IGuild }) {
   };
 
   return (
-    <div className="container">
+    <div className="container w-full max-w-md">
       <div className="my-4">
+        <p className="text-sm text-gray-600 mb-2">
+          To begin, enter a guild URL or replace the current one if needed.
+        </p>
         <div className="mt-1 flex rounded-md shadow-sm">
           <input
             type="text"
@@ -86,16 +91,16 @@ function GuildUrlInput({ guild }: { guild?: IGuild }) {
             value={inputValue}
             onChange={handleChange}
             placeholder="https://swgoh.gg/g/guildId/"
-            className={`focus:ring-indigo-500 focus:border-indigo-500 flex-grow block w-full rounded-md sm:text-sm border-gray-300 ${!isValidUrl ? "border-red-500" : ""}`}
+            className={`focus:ring-indigo-500 focus:border-indigo-500 flex-grow block w-full rounded-l-md sm:text-sm border-gray-300 ${!isValidUrl ? "border-red-500" : ""}`}
           />
           <button
             onClick={handleButtonClick}
             disabled={!isValidUrl}
-            className={`ml-2 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white ${isValidUrl ? "bg-indigo-600 hover:bg-indigo-700" : "bg-gray-400 cursor-not-allowed"} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}>
-            {isGuildExisting && inputValue === guild?.url ? "REINICIAR" : "INICIAR"}
+            className={`ml-2 px-4 py-2 border border-transparent text-sm font-medium rounded-r-md text-white ${isValidUrl ? "bg-indigo-600 hover:bg-indigo-700" : "bg-gray-400 cursor-not-allowed"} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}>
+            {isGuildExisting && inputValue === guild?.url ? "RESTART" : "START"}
           </button>
         </div>
-        {!isValidUrl && <p className="text-sm text-red-500 mt-2">Por favor, insira uma URL válida.</p>}
+        {!isValidUrl && <p className="text-sm text-red-500 mt-2">Please enter a valid URL.</p>}
       </div>
     </div>
   );

@@ -11,6 +11,7 @@ import { toast } from 'react-toastify';
 // import { fetchPlayerData } from '../services/playerService';
 import TwManageContext from '../providers/TwManageContext';
 import { unitDataProcessorService, shipDataProcessorService } from '../services/dataProcessorService';
+import { setInteractionStateInLocalStorage } from '../helpers/localStorageHelper';
 
 interface ISelectedUnitsDisplayProps {
   selectedUnits: ISelectedUnit[];
@@ -142,10 +143,7 @@ function SelectedUnitsDisplay({ selectedUnits, members }: ISelectedUnitsDisplayP
   async function handleFinalizeSelection() {
     try {
       // 1. Filtra as unidades selecionadas para obter apenas as unidades (type === 'UNIT') e apenas os navios (type === 'SHIP').
-      // console.log('localSelectedUnits', localSelectedUnits);
-
       const selectedUnitsOnly = localSelectedUnits.filter(unit => unit.type === 'UNIT');
-      // console.log('selectedUnitsOnly', selectedUnitsOnly);
 
       const selectedShipsOnly = localSelectedUnits.filter(unit => unit.type === 'SHIP');
 
@@ -161,6 +159,9 @@ function SelectedUnitsDisplay({ selectedUnits, members }: ISelectedUnitsDisplayP
 
       // 4. Apaga os dados do localStorage.
       clearUnitsFromLocalStorage();
+
+      // 5. Atualiza o localStorage para indicar que a interação foi finalizada.
+      setInteractionStateInLocalStorage(false);
 
       // Mensagem de sucesso
       toast.success('Unidades selecionadas foram salvas com sucesso!', {
@@ -185,80 +186,77 @@ function SelectedUnitsDisplay({ selectedUnits, members }: ISelectedUnitsDisplayP
   }
 
   return (
-    <div className="selected-units-section p-6 bg-white shadow-md rounded-lg">
-      {!isMembersTableExpanded && (
-        <>
-          <h2 className="text-xl font-bold mb-4">Seleção de Unidades</h2>
+    !isMembersTableExpanded && (
+      <div className="selected-units-section p-6 bg-white shadow-md rounded-lg">
+        <h2 className="text-xl font-bold mb-4">Unit Selection</h2>
 
-          <div className="dropdowns-section mb-4 flex gap-4 flex-col md:flex-row">
-            {/* Campo de busca para units */}
-            <div className="mb-2 w-full md:w-1/2">
-              <ReactSelect
-                key={forceUpdateKey}
-                options={unitOptions}
-                isSearchable
-                placeholder="Selecione uma unidade"
-                onChange={(selectedOption) => handleSelect('unit', selectedOption)}
-                value={selectedUnit}
-              />
-            </div>
-
-            {/* Campo de busca para navios */}
-            <div className="mb-2 w-full md:w-1/2">
-              <ReactSelect
-                key={forceUpdateKey}
-                options={shipOptions}
-                isSearchable
-                placeholder="Selecione um navio"
-                onChange={(selectedOption) => handleSelect('ship', selectedOption)}
-                value={selectedShip}
-              />
-            </div>
+        <div className="dropdowns-section mb-4 flex gap-4 flex-col md:flex-row">
+          {/* Search field for units */}
+          <div className="mb-2 w-full md:w-1/2">
+            <ReactSelect
+              key={forceUpdateKey}
+              options={unitOptions}
+              isSearchable
+              placeholder="Select a unit"
+              onChange={(selectedOption) => handleSelect('unit', selectedOption)}
+              value={selectedUnit}
+            />
           </div>
 
-          <div className="selected-units flex flex-wrap gap-2">
-            {localSelectedUnits.map(unit => (
-              <div key={unit.base_id} className="unit-container flex items-center gap-1 bg-blue-200 rounded-full py-1 px-2 text-sm shadow-sm hover:shadow-md">
-                <span title={unit.name}>{unit.name}</span>
-                <button
-                  onClick={() => handleRemoveUnit(unit)}
-                  title='Remover Unidade'
-                  className="remove-button text-red-500 ml-2 transition duration-300 ease-in-out transform hover:scale-150 hover:border-red-500 p-0.5 rounded-r-full"
-                  style={{ cursor: 'pointer', verticalAlign: 'middle', boxSizing: 'border-box' }}
-                >
-                  ×
-                </button>
-              </div>
-            ))}
+          {/* Search field for ships */}
+          <div className="mb-2 w-full md:w-1/2">
+            <ReactSelect
+              key={forceUpdateKey}
+              options={shipOptions}
+              isSearchable
+              placeholder="Select a ship"
+              onChange={(selectedOption) => handleSelect('ship', selectedOption)}
+              value={selectedShip}
+            />
           </div>
+        </div>
 
-          <div className="selected-units-actions mt-4 flex justify-between">
-            {/* Botão para Limpar Seleção */}
-            {localSelectedUnits.length > 0 && (
+        <div className="selected-units flex flex-wrap gap-2">
+          {localSelectedUnits.map(unit => (
+            <div key={unit.base_id} className="unit-container flex items-center gap-1 bg-blue-200 rounded-full py-1 px-2 text-sm shadow-sm hover:shadow-md">
+              <span title={unit.name}>{unit.name}</span>
               <button
-                onClick={handleClearSelection}
-                className="bg-red-500 text-white px-4 py-2 rounded shadow"
-                title="Isso irá limpar todas as unidades selecionadas apenas localmente, sem afetar o banco de dados."
+                onClick={() => handleRemoveUnit(unit)}
+                title='Remove Unit'
+                className="remove-button text-red-500 ml-2 transition duration-300 ease-in-out transform hover:scale-150 hover:border-red-500 p-0.5 rounded-r-full cursor-pointer"
               >
-                Limpar Seleção
+                ×
               </button>
-            )}
+            </div>
+          ))}
+        </div>
 
-            {/* Concluir Seleção (ou mensagem de erro) */}
-            {localSelectedUnits.length > 0 ? (
-              <button
-                onClick={handleFinalizeSelection}
-                className="bg-blue-500 text-white px-4 py-2 rounded shadow"
-              >
-                Concluir Seleção
-              </button>
-            ) : (
-              <p className="text-red-500">Ao menos uma unidade deve ser selecionada.</p>
-            )}
-          </div>
-        </>
-      )}
-    </div>
+        <div className="selected-units-actions mt-4 flex justify-between">
+          {/* Clear Selection Button */}
+          {localSelectedUnits.length > 0 && (
+            <button
+              onClick={handleClearSelection}
+              className="bg-red-500 text-white px-4 py-2 rounded shadow"
+              title="This will clear all selected units locally, without affecting the database."
+            >
+              Clear Selection
+            </button>
+          )}
+
+          {/* Finalize Selection (or error message) */}
+          {localSelectedUnits.length > 0 ? (
+            <button
+              onClick={handleFinalizeSelection}
+              className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded shadow"
+            >
+              Finalize Selection
+            </button>
+          ) : (
+            <p className="text-red-500">At least one unit must be selected.</p>
+          )}
+        </div>
+      </div>
+    )
   );
 }
 

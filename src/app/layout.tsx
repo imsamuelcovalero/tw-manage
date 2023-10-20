@@ -5,6 +5,7 @@ import { Inter } from 'next/font/google'
 // import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { TwManageProvider } from './providers/TwManageProvider';
+import Header from './components/Header';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -22,6 +23,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <TwManageProvider>
+          <Header />
           <ToastContainer />
           {children}
         </TwManageProvider>

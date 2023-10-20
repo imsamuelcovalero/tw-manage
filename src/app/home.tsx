@@ -48,22 +48,16 @@ export default async function Home() {
   // console.log('player', player);
 
   return (
-    <div className="container">
-      <h1>Home</h1>
+    <div className="container mx-auto px-4 py-8 flex flex-col items-center">
+      <h1 className="text-4xl font-bold mb-4">Home</h1>
       {guild ? (
-        <div>
-          <GuildUrlInput guild={guild} />
-        </div>
+        <GuildUrlInput guild={guild} />
       ) : (
-        <div>
-          <GuildUrlInput />
-        </div>
+        <GuildUrlInput />
       )}
-      <p>Guild Name: {guild?.name}</p>
-      {/* <p>Player Name: {player?.data.name}</p> */}
+      <h1 className="text-3xl mt-4 font-medium">Guild Name: {guild?.name}</h1>
       <GuildMembersTable members={members} />
-      {/* {members && members.length > 0 && <SelectedUnitsDisplay selectedUnits={selectedUnits} members={members} />} */}
       <SelectedUnitsDisplay selectedUnits={selectedUnits} members={members} />
     </div>
-  )
+  );
 }

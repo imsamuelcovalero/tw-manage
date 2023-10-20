@@ -1,30 +1,19 @@
+/* File: src/app/units/page.tsx */
 import React from 'react'
-import { getAllSelectedUnits, getAllUnits, getAllShips } from '../services/prismaUnitsService';
+import { getAllUnits, getAllShips } from '../services/prismaUnitsService';
 import UnitsDataDisplay from '../components/UnitsDataDisplay';
 
 export default async function Page() {
-  // const selectedUnits = await getAllSelectedUnits();
-
-  // if (!selectedUnits) {
-  //   console.log('Units not found');
-  //   return;
-  // }
-
-  // const members = await getMembers();
-
-  // if (!members) {
-  //   console.log('Members not found');
-  //   return;
-  // }
-
   const unitsData = await getAllUnits();
 
   const shipsData = await getAllShips();
 
   return (
-    <main >
-      {unitsData && shipsData && (
+    <main className="min-h-screen flex flex-col justify-center items-center bg-gray-100">
+      {(unitsData.length > 0 || shipsData.length > 0) ? (
         <UnitsDataDisplay unitsData={unitsData} shipsData={shipsData} />
+      ) : (
+        <p className="text-center">No data available for units or ships at the moment.</p>
       )}
     </main>
   )
