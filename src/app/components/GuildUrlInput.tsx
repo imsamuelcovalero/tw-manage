@@ -30,6 +30,10 @@ function GuildUrlInput({ guild }: { guild?: IGuild }) {
     setIsValidUrl(urlPattern.test(url));
   };
 
+  const handleInputClick = (e: React.MouseEvent<HTMLInputElement>) => {
+    e.currentTarget.select();
+  };
+
   function guildData(data: any): IGuild {
     return {
       name: data.name,
@@ -90,6 +94,7 @@ function GuildUrlInput({ guild }: { guild?: IGuild }) {
             name="guildUrl"
             value={inputValue}
             onChange={handleChange}
+            onClick={handleInputClick}
             placeholder="https://swgoh.gg/g/guildId/"
             className={`focus:ring-indigo-500 focus:border-indigo-500 flex-grow block w-full rounded-l-md sm:text-sm border-gray-300 ${!isValidUrl ? "border-red-500" : ""}`}
           />
