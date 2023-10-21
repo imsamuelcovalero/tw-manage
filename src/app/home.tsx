@@ -15,23 +15,9 @@ export default async function Home() {
   const guild = await getCurrentGuild();
   // console.log('guild', guild);
 
-  // if (!guild) {
-  //   console.log('Guild not found');
-  //   return <GuildUrlInput guild={ } />;
-  // }
-
-  // const isGuildExisting = Boolean(guild?.url);
-  // const data = await fetchGuildData(guild.url);
-
-  /* Aqui vamos testar inserir os membros na tabela de membros */
-  // Get the guildId from the URL
-  // const guildId = extractGuildId(guild.url);
-
   const members = await getMembers();
 
   if (!members) {
-    // const data = await fetchGuildData(guild.url);
-    // const membersData = data.data.members;
     console.log('Members not found');
     return;
   }
