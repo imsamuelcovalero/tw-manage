@@ -9,8 +9,8 @@ interface ToastProviderProps {
 export default function ToastProvider({ children }: ToastProviderProps) {
   return (
     <>
-      {children}
       <ToastContainer />
+      {children}
     </>
   );
 }

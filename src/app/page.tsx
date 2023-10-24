@@ -1,10 +1,13 @@
 /* File: src/app/page.tsx */
 import Home from './home'
+import AuthenticatedLayout from './authenticatedLayout'
 
 export default function Page() {
   return (
-    <main >
-      <Home />
-    </main>
+    <AuthenticatedLayout>
+      <main >
+        <Home />
+      </main>
+    </AuthenticatedLayout>
   )
 }

@@ -52,7 +52,9 @@ export async function getBackupMembers(): Promise<IMember[]> {
 
 // Função para consultar os players de 'Members'
 export async function getMembers(): Promise<IMember[]> {
-  return await prisma.member.findMany();
+  const result = await prisma.member.findMany();
+  console.log('result', result);
+  return result;
 }
 
 // Função para consultar um player por ally_code em 'BackupMembers'

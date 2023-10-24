@@ -12,7 +12,7 @@ export function getGuildApiLink(guildId: string) {
 
 export async function fetchGuildData(url: string) {
   const guildId = extractGuildId(url);
-  console.log('guildId_G', guildId);
+  // console.log('guildId_G', guildId);
 
   if (!guildId) {
     console.warn("Invalid URL provided. Unable to extract guild ID.");

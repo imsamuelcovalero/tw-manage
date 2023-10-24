@@ -12,6 +12,9 @@
   },
   "dependencies": {
     "@prisma/client": "^5.4.1",
+    "@supabase/auth-helpers-nextjs": "^0.8.1",
+    "@supabase/auth-ui-react": "^0.4.6",
+    "@supabase/auth-ui-shared": "^0.1.8",
     "@supabase/supabase-js": "^2.38.2",
     "@types/node": "20.6.2",
     "@types/react": "18.2.22",
@@ -37,6 +40,7 @@
     "@types/node-fetch": "^2.6.5",
     "nodemon": "^3.0.1",
     "prisma": "^5.4.1",
+    "supabase": "^1.106.1",
     "ts-node": "^10.9.1"
   }
 }

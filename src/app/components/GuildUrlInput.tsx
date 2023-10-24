@@ -1,6 +1,6 @@
 "use client";
 /* File: src/app/components/startButton.tsx */
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { fetchGuildData } from '../services/guildService';
 import { prepareMembersData } from '../services/memberSevice';
 import { IGuild } from '../interfaces/types';
@@ -54,6 +54,7 @@ function GuildUrlInput({ guild }: { guild?: IGuild }) {
       // console.log('transformedData', transformedData);
 
       const guildResponseData = await apiService.upsertGuild(transformedData);
+      console.log('guildResponseData', guildResponseData);
 
       // Após ter sucesso em inserir a guilda
       const preparedMembers = prepareMembersData(data.data.members, inputValue);

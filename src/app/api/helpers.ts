@@ -1,14 +1,15 @@
 /* File: src/app/api/helper/helper.ts */
 import { NextResponse } from 'next/server';
 
-async function handleDatabaseOperation(operation: () => Promise<boolean>, successMessage: string) {
+async function handleDatabaseOperation<T>(operation: () => Promise<T>, successMessage: string): Promise<NextResponse> {
   try {
-    const success = await operation();
+    const result = await operation();
+    // console.log('result', result);
 
-    if (success) {
-      return NextResponse.json({ message: successMessage }, { status: 200 });
+    if (result) {
+      return NextResponse.json({ data: result, message: successMessage }, { status: 200 });
     } else {
-      return NextResponse.json({ message: "Erro ao realizar operação." }, { status: 500 });
+      return NextResponse.json({ message: "No data returned from operation." }, { status: 204 });  // Status 204: No Content
     }
   } catch (error: unknown) {
     if (error instanceof Error) {

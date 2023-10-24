@@ -192,7 +192,7 @@ function SelectedUnitsDisplay({ selectedUnits, members }: ISelectedUnitsDisplayP
 
         <div className="dropdowns-section mb-4 flex gap-4 flex-col md:flex-row">
           {/* Search field for units */}
-          <div className="mb-2 w-full md:w-1/2">
+          <div className="mb-2 w-full md:w-1/2" style={{ minWidth: '200px' }}>
             <ReactSelect
               key={forceUpdateKey}
               options={unitOptions}
@@ -204,7 +204,7 @@ function SelectedUnitsDisplay({ selectedUnits, members }: ISelectedUnitsDisplayP
           </div>
 
           {/* Search field for ships */}
-          <div className="mb-2 w-full md:w-1/2">
+          <div className="mb-2 w-full md:w-1/2" style={{ minWidth: '200px' }}>
             <ReactSelect
               key={forceUpdateKey}
               options={shipOptions}

@@ -1,37 +1,64 @@
 /* File: src/app/home.tsx */
 import React from 'react'
-import { fetchGuildData, extractGuildId } from './services/guildService';
-import { fetchPlayerData } from './services/playerService';
-import { IGuild } from './interfaces/types';
 import { getCurrentGuild } from './services/prismaGuildService';
 import { getMembers } from './services/prismaMembersService';
 import { getAllSelectedUnits } from './services/prismaUnitsService';
 import GuildUrlInput from './components/GuildUrlInput';
 import GuildMembersTable from './components/GuildMembersTable';
 import SelectedUnitsDisplay from './components/SelectedUnitsDisplay';
+import { IGuild, IMember, ISelectedUnit } from './interfaces/types';
+import * as apiService from './services/apiService';
+
+// interface IHomeProps {
+//   guild: IGuild;
+//   members: IMember[];
+//   selectedUnits: ISelectedUnit[];
+// }
 
 export default async function Home() {
+  // const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
-  const guild = await getCurrentGuild();
-  // console.log('guild', guild);
+  // async function fetchData(url: string) {
+  //   const res = await fetch(`${baseUrl}${url}`, { next: { revalidate: 900 } });
+  //   console.log('res', res);
 
-  const members = await getMembers();
+  //   return res.json();
+  // }
 
-  if (!members) {
-    console.log('Members not found');
-    return;
-  }
+  const guild: IGuild = await apiService.getGuildData();
+  const members: IMember[] = await apiService.getMembersData();
 
-  const selectedUnits = await getAllSelectedUnits();
+  // if (!members) {
+  //   console.log('No members');
 
-  if (!selectedUnits) {
-    console.log('Units not found');
-    return;
-  }
+  //   return (
+  //     <div className="container mx-auto px-4 py-8 flex flex-col items-center">
+  //       <h1 className="text-4xl font-bold mb-4">Home</h1>
+  //       {guild ? (
+  //         <GuildUrlInput guild={guild} />
+  //       ) : (
+  //         <GuildUrlInput />
+  //       )}
+  //       <h1 className="text-3xl mt-4 font-medium">Guild Name: {guild?.name}</h1>
+  //     </div>
+  //   );
+  // }
 
-  // const allyCode = "417229579";
-  // const player = await fetchPlayerData(allyCode);
-  // console.log('player', player);
+  const selectedUnits: ISelectedUnit[] = await apiService.getSelectedUnitsData();
+  // if (!selectedUnits) {
+  //   return (
+  //     <div className="container mx-auto px-4 py-8 flex flex-col items-center">
+  //       <h1 className="text-4xl font-bold mb-4">Home</h1>
+  //       {guild ? (
+  //         <GuildUrlInput guild={guild} />
+  //       ) : (
+  //         <GuildUrlInput />
+  //       )}
+  //       <h1 className="text-3xl mt-4 font-medium">Guild Name: {guild?.name}</h1>
+  //       {members && <GuildMembersTable members={members} />}
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="container mx-auto px-4 py-8 flex flex-col items-center">
@@ -42,8 +69,8 @@ export default async function Home() {
         <GuildUrlInput />
       )}
       <h1 className="text-3xl mt-4 font-medium">Guild Name: {guild?.name}</h1>
-      <GuildMembersTable members={members} />
-      <SelectedUnitsDisplay selectedUnits={selectedUnits} members={members} />
+      {members && <GuildMembersTable members={members} />}
+      {selectedUnits && <SelectedUnitsDisplay selectedUnits={selectedUnits} members={members} />}
     </div>
   );
 }

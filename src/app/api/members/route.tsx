@@ -1,7 +1,11 @@
 /* File: src/app/api/member/route.tsx */
-import { upsertMembers, removeMembersByAllyCodes } from '@/app/services/prismaMembersService';
+import { upsertMembers, removeMembersByAllyCodes, getMembers } from '@/app/services/prismaMembersService';
 import validators from '@/app/api/middlewares/validators';
 import { handleDatabaseOperation } from '../helpers';
+
+export async function GET() {
+  return handleDatabaseOperation(() => getMembers(), "Membros retornados com sucesso!");
+}
 
 export async function POST(req: Request) {
   const membersData = await req.json();
