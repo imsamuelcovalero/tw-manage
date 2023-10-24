@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
     await supabase.auth.exchangeCodeForSession(code)
   }
 
-  return NextResponse.redirect(new URL('/login', req.url))
+  return NextResponse.redirect(new URL('/', req.url))
 }
 
 // export async function GET(request: NextRequest) {

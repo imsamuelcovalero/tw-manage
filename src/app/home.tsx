@@ -17,48 +17,23 @@ import * as apiService from './services/apiService';
 
 export default async function Home() {
   // const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  let guild = null;
+  let members = [];
+  let selectedUnits = [];
 
-  // async function fetchData(url: string) {
-  //   const res = await fetch(`${baseUrl}${url}`, { next: { revalidate: 900 } });
-  //   console.log('res', res);
+  // Fetch guild data
+  guild = await apiService.getGuildData();
 
-  //   return res.json();
-  // }
+  // If guild data is available, fetch members data
+  if (guild) {
+    members = await apiService.getMembersData();
+  }
 
-  const guild: IGuild = await apiService.getGuildData();
-  const members: IMember[] = await apiService.getMembersData();
-
-  // if (!members) {
-  //   console.log('No members');
-
-  //   return (
-  //     <div className="container mx-auto px-4 py-8 flex flex-col items-center">
-  //       <h1 className="text-4xl font-bold mb-4">Home</h1>
-  //       {guild ? (
-  //         <GuildUrlInput guild={guild} />
-  //       ) : (
-  //         <GuildUrlInput />
-  //       )}
-  //       <h1 className="text-3xl mt-4 font-medium">Guild Name: {guild?.name}</h1>
-  //     </div>
-  //   );
-  // }
-
-  const selectedUnits: ISelectedUnit[] = await apiService.getSelectedUnitsData();
-  // if (!selectedUnits) {
-  //   return (
-  //     <div className="container mx-auto px-4 py-8 flex flex-col items-center">
-  //       <h1 className="text-4xl font-bold mb-4">Home</h1>
-  //       {guild ? (
-  //         <GuildUrlInput guild={guild} />
-  //       ) : (
-  //         <GuildUrlInput />
-  //       )}
-  //       <h1 className="text-3xl mt-4 font-medium">Guild Name: {guild?.name}</h1>
-  //       {members && <GuildMembersTable members={members} />}
-  //     </div>
-  //   );
-  // }
+  // If members data is available, fetch selected units data
+  if (members.length > 0) {
+    selectedUnits = await apiService.getSelectedUnitsData();
+  }
+  // console.log('selectedUnits', selectedUnits);
 
   return (
     <div className="container mx-auto px-4 py-8 flex flex-col items-center">
@@ -69,8 +44,10 @@ export default async function Home() {
         <GuildUrlInput />
       )}
       <h1 className="text-3xl mt-4 font-medium">Guild Name: {guild?.name}</h1>
-      {members && <GuildMembersTable members={members} />}
-      {selectedUnits && <SelectedUnitsDisplay selectedUnits={selectedUnits} members={members} />}
+      <GuildMembersTable members={members} />
+      <SelectedUnitsDisplay selectedUnits={selectedUnits} members={members} />
+      {/* {members.length > 0 && <GuildMembersTable members={members} />}
+      {selectedUnits.length > 0 && <SelectedUnitsDisplay selectedUnits={selectedUnits} members={members} />} */}
     </div>
   );
 }

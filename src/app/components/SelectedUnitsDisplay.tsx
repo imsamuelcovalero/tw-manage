@@ -188,11 +188,11 @@ function SelectedUnitsDisplay({ selectedUnits, members }: ISelectedUnitsDisplayP
   return (
     !isMembersTableExpanded && (
       <div className="selected-units-section p-6 bg-white shadow-md rounded-lg">
-        <h2 className="text-xl font-bold mb-4">Unit Selection</h2>
+        <h2 className="text-xl font-bold mb-4 text-center">Unit Selection</h2>
 
         <div className="dropdowns-section mb-4 flex gap-4 flex-col md:flex-row">
           {/* Search field for units */}
-          <div className="mb-2 w-full md:w-1/2" style={{ minWidth: '200px' }}>
+          <div className="mb-2 w-full md:w-1/2" style={{ minWidth: '200px', maxWidth: '400px' }}>
             <ReactSelect
               key={forceUpdateKey}
               options={unitOptions}
@@ -204,7 +204,7 @@ function SelectedUnitsDisplay({ selectedUnits, members }: ISelectedUnitsDisplayP
           </div>
 
           {/* Search field for ships */}
-          <div className="mb-2 w-full md:w-1/2" style={{ minWidth: '200px' }}>
+          <div className="mb-2 w-full md:w-1/2" style={{ minWidth: '200px', maxWidth: '400px' }}>
             <ReactSelect
               key={forceUpdateKey}
               options={shipOptions}

@@ -20,7 +20,7 @@ export async function middleware(req: NextRequest) {
 
   // Se o usuário estiver logado e a URL atual for '/login', redirecione para a página principal.
   if (user && req.nextUrl.pathname === '/login') {
-    console.log('XABLAU1');
+    // console.log('XABLAU1');
     const absoluteUrl = new URL('/', req.nextUrl.origin).toString();
 
     return NextResponse.redirect(absoluteUrl);
