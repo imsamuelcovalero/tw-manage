@@ -25,6 +25,8 @@ export default async function Home() {
 
   // Fetch guild data
   guild = await apiService.getGuildData();
+  console.log('guildX', guild);
+
 
   // If guild data is available, fetch members data
   if (guild) {
