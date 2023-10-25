@@ -17,8 +17,8 @@ export async function fetchUnitsData() {
 
     const response = await fetch(apiUrl, { cache: 'no-store' });
     if (!response.ok) {
-      console.log('response_Error', response.text());
-
+      console.error('Response status:', response.status);
+      console.error('Response text:', await response.text());
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
     const result = await response.json();
