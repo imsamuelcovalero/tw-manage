@@ -8,7 +8,7 @@ export async function POST(req: Request) {
   validators.validateMembersData(membersData);
   // console.log('Data received:', membersData);
 
-  return handleDatabaseOperation(() => upsertMembers(membersData), "Membros adicionados com sucesso!");
+  return await handleDatabaseOperation(() => upsertMembers(membersData), "Membros adicionados com sucesso!");
 }
 
 export async function DELETE(req: Request) {
@@ -16,5 +16,5 @@ export async function DELETE(req: Request) {
   validators.validateAllyCodesData(allyCodesData);
   // console.log('Data received:', allyCodesData);
 
-  return handleDatabaseOperation(() => removeMembersByAllyCodes(allyCodesData), "Membros removidos com sucesso!");
+  return await handleDatabaseOperation(() => removeMembersByAllyCodes(allyCodesData), "Membros removidos com sucesso!");
 }

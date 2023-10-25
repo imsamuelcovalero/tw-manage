@@ -4,7 +4,7 @@ import validators from '@/app/api/middlewares/validators';
 import { handleDatabaseOperation } from '../helpers';
 
 export async function GET() {
-  return handleDatabaseOperation(() => getMembers(), "Membros retornados com sucesso!");
+  return await handleDatabaseOperation(() => getMembers(), "Membros retornados com sucesso!");
 }
 
 export async function POST(req: Request) {
@@ -12,7 +12,7 @@ export async function POST(req: Request) {
   validators.validateMembersData(membersData);
   // console.log('Data received:', membersData);
 
-  return handleDatabaseOperation(() => upsertMembers(membersData), "Membros adicionados com sucesso!");
+  return await handleDatabaseOperation(() => upsertMembers(membersData), "Membros adicionados com sucesso!");
 }
 
 export async function DELETE(req: Request) {
@@ -20,5 +20,5 @@ export async function DELETE(req: Request) {
   validators.validateAllyCodesData(allyCodesData);
   // console.log('Data received:', allyCodesData);
 
-  return handleDatabaseOperation(() => removeMembersByAllyCodes(allyCodesData), "Membros removidos com sucesso!");
+  return await handleDatabaseOperation(() => removeMembersByAllyCodes(allyCodesData), "Membros removidos com sucesso!");
 }

@@ -8,5 +8,5 @@ export async function POST(req: Request) {
   validators.validateGuildData(guildData);
   // console.log('Data received:', guildData);
 
-  return handleDatabaseOperation(() => upsertGuild(guildData), "Guilda iniciada com sucesso!");
+  return await handleDatabaseOperation(() => upsertGuild(guildData), "Guilda iniciada com sucesso!");
 }

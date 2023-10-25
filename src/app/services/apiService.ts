@@ -64,14 +64,14 @@ export async function getGuildData() {
 
 export async function getMembersData() {
   const data = await fetchWithRevalidate('/members');
-  console.log('dataBancoMembers', data);
+  // console.log('dataBancoMembers', data);
 
   return data;
 }
 
 export async function getSelectedUnitsData() {
   const data = await fetchWithRevalidate('/selectedUnits');
-  console.log('dataBancoSelectedUnits', data);
+  // console.log('dataBancoSelectedUnits', data);
   return data;
 }
 
