@@ -33,7 +33,7 @@ async function fetchWithRevalidate(endpoint: string, options: RequestInit = {}):
   try {
     const response = await fetch(`${BASE_URL}${endpoint}`, {
       ...options,
-      next: { revalidate: REVALIDATE_TIME }  // tempo de revalidação em segundos (15 minutos)
+      // next: { revalidate: REVALIDATE_TIME }  // tempo de revalidação em segundos (15 minutos)
     });
 
     console.log('Response Status:', response.status);  // Log do status da resposta.
