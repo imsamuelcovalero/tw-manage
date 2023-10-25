@@ -17,10 +17,10 @@ export async function fetchUnitsData() {
 
     const response = await fetch(apiUrl, { cache: 'no-store' });
     if (!response.ok) {
+      console.log('response_Error', response.text());
+
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
-    const resultText = await response.text();
-    console.log('resultText_U', resultText);
     const result = await response.json();
     console.log('result_U', result);
     return result;

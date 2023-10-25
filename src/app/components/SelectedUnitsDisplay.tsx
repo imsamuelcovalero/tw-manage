@@ -81,7 +81,7 @@ function SelectedUnitsDisplay({ selectedUnits, members }: ISelectedUnitsDisplayP
       // console.log('player', player.units);
 
       const unitsData = await fetchUnitsData();
-      // console.log('unitsData', unitsData);
+      console.log('unitsDataAPI', unitsData);
       const shipsData = await fetchShipsData();
       // console.log('shipsData', shipsData);
       setUnits(processUnitData(unitsData.data));
