@@ -18,8 +18,11 @@ export async function fetchPlayerData(allyCode: string) {
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
+    const result = await response.json();
+    console.log('result_P', result);
+    return result;
     // console.log('response_P', response.json());
-    return await response.json();
+    // return await response.json();
   } catch (error: any) {
     console.error("There was a problem with the fetch operation:", error.message);
     return null;

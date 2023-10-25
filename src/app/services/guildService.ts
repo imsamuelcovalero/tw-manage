@@ -34,8 +34,10 @@ export async function fetchGuildData(url: string) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
     // console.log('response_G', response.json());
-
-    return await response.json();
+    const result = await response.json();
+    console.log('result_G', result);
+    return result;
+    // return await response.json();
   } catch (error: any) {
     console.error("There was a problem with the fetch operation:", error.message);
     return null;

@@ -19,9 +19,11 @@ export async function fetchUnitsData() {
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
+    const result = await response.json();
+    console.log('result_U', result);
+    return result;
     // console.log('response_U', response.json());
-
-    return await response.json();
+    // return await response.json();
   } catch (error: any) {
     console.error("There was a problem with the fetch operation:", error.message);
     return null;
@@ -39,8 +41,11 @@ export async function fetchUnitData(unitId: number) {
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
+    const result = await response.json();
+    console.log('result_U2', result);
+    return result;
     // console.log('response_U2', response.json());
-    return await response.json();
+    // return await response.json();
   } catch (error: any) {
     console.error("There was a problem with the fetch operation:", error.message);
     return null;
@@ -57,8 +62,11 @@ export async function fetchShipsData() {
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
+    const result = await response.json();
+    console.log('result_S', result);
+    return result;
     // console.log('response_S', response.json());
-    return await response.json();
+    // return await response.json();
   } catch (error: any) {
     console.error("There was a problem with the fetch operation:", error.message);
     return null;
