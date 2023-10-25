@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 async function handleDatabaseOperation<T>(operation: () => Promise<T>, successMessage: string): Promise<NextResponse> {
   try {
     const result = await operation();
-    // console.log('result', result);
+    console.log('resultX', result);
 
     if (result) {
       return NextResponse.json({ data: result, message: successMessage }, { status: 200 });
