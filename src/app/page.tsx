@@ -3,6 +3,8 @@ import Home from './home'
 import AuthenticatedLayout from './authenticatedLayout'
 
 export default function Page() {
+  console.log('pageX');
+
   return (
     <AuthenticatedLayout>
       <main >

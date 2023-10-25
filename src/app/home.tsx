@@ -17,6 +17,8 @@ import * as apiService from './services/apiService';
 
 export default async function Home() {
   // const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  console.log('homeX', process.env.NODE_ENV);
+
   let guild = null;
   let members = [];
   let selectedUnits = [];

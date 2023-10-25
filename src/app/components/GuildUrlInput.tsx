@@ -11,6 +11,8 @@ import TwManageContext from '../providers/TwManageContext';
 import { setInteractionStateInLocalStorage } from '../helpers/localStorageHelper';
 
 function GuildUrlInput({ guild }: { guild?: IGuild }) {
+  console.log('guildUrlInputX');
+
   const [inputValue, setInputValue] = useState(guild?.url || "");
   const [isValidUrl, setIsValidUrl] = useState(true);
 
