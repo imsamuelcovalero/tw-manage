@@ -3,22 +3,59 @@
 const BASE_URL = (process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000') + '/api';
 const REVALIDATE_TIME = 900;  // tempo de revalidação em segundos (15 minutos)
 
-async function fetchWithRevalidate(endpoint: string, options: RequestInit = {}) {
-  const response = await fetch(`${BASE_URL}${endpoint}`, {
-    ...options,
-    next: { revalidate: REVALIDATE_TIME }  // tempo de revalidação em segundos (15 minutos)
-  });
+// async function fetchWithRevalidate(endpoint: string, options: RequestInit = {}) {
+//   console.log('fetchWithRevalidateX');
 
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || 'Something went wrong');
+//   const response = await fetch(`${BASE_URL}${endpoint}`, {
+//     ...options,
+//     next: { revalidate: REVALIDATE_TIME }  // tempo de revalidação em segundos (15 minutos)
+//   });
+
+//   if (!response.ok) {
+//     const errorData = await response.json();
+//     throw new Error(errorData.message || 'Something went wrong');
+//   }
+//   const responseJson = await response.json();
+//   return responseJson.data;  // Retornando apenas a propriedade data do objeto JSON.
+// }
+
+function headersToObject(headers: Headers): Record<string, string> {
+  let result: Record<string, string> = {};
+  headers.forEach((value, name) => {
+    result[name] = value;
+  });
+  return result;
+}
+
+async function fetchWithRevalidate(endpoint: string, options: RequestInit = {}): Promise<any> {
+  console.log('fetchWithRevalidateX - Endpoint:', endpoint);  // Log do endpoint que está sendo acessado.
+
+  try {
+    const response = await fetch(`${BASE_URL}${endpoint}`, {
+      ...options,
+      next: { revalidate: REVALIDATE_TIME }  // tempo de revalidação em segundos (15 minutos)
+    });
+
+    console.log('Response Status:', response.status);  // Log do status da resposta.
+    console.log('Response Headers:', JSON.stringify(headersToObject(response.headers)));  // Log dos cabeçalhos da resposta.
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('Error Data:', JSON.stringify(errorData));  // Log de qualquer erro retornado pela API.
+      throw new Error(errorData.message || 'Something went wrong');
+    }
+
+    const responseJson = await response.json();
+    console.log('Response JSON:', JSON.stringify(responseJson));  // Log do JSON de resposta.
+    return responseJson.data;  // Retornando apenas a propriedade data do objeto JSON.
+  } catch (error: any) {
+    console.error('Fetch Error:', error.message);  // Log de qualquer erro que ocorra durante o fetch.
+    throw error;  // Re-lançamento do erro para ser capturado e tratado por qualquer código que chama esta função.
   }
-  const responseJson = await response.json();
-  return responseJson.data;  // Retornando apenas a propriedade data do objeto JSON.
 }
 
 export async function getGuildData() {
-  console.log('getGuildDataX');
+  console.log('getGuildDataX', BASE_URL);
 
   const data = await fetchWithRevalidate('/guild');
   console.log('dataBancoGuild', data);
