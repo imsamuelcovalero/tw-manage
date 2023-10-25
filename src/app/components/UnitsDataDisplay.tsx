@@ -1,6 +1,6 @@
 /* File: src/app/components/UnitsDataDisplay.tsx */
 "use client";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { fetchPlayerData } from '../services/playerService';
@@ -26,12 +26,18 @@ function UnitsDataDisplay({
   unitsData,
   shipsData
 }: IUnitsDataUpdateProps) {
-  // console.log('unitsData', unitsData);
+  console.log('unitsData', unitsData);
   const [selectedUnitDetails, setSelectedUnitDetails] = useState<IUnit | null>(null);
   // console.log('selectedUnitDetails', selectedUnitDetails);
+  const [isNewInteraction, setIsNewInteraction] = useState<boolean>(false);
 
-  const isNewInteraction = getInteractionStateFromLocalStorage() || false;
-  console.log('isNewInteraction', isNewInteraction);
+  // const isNewInteraction = getInteractionStateFromLocalStorage() || false;
+  // console.log('isNewInteraction', isNewInteraction);
+
+  useEffect(() => {
+    const interactionState = getInteractionStateFromLocalStorage() || false;
+    setIsNewInteraction(interactionState);
+  }, []);
 
 
   function prepareDropdownData(players: string[]): { value: string; label: string }[] {

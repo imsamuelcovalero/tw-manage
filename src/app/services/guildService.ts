@@ -33,7 +33,7 @@ export async function fetchGuildData(url: string) {
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
-    console.log('response_G', response.json());
+    // console.log('response_G', response.json());
 
     return await response.json();
   } catch (error: any) {

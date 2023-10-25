@@ -21,7 +21,7 @@ interface ISelectedUnitsDisplayProps {
 function SelectedUnitsDisplay({ selectedUnits, members }: ISelectedUnitsDisplayProps) {
   const [units, setUnits] = useState<ISelectedUnit[]>([]);
   const [ships, setShips] = useState<ISelectedUnit[]>([]);
-  const [localSelectedUnits, setLocalSelectedUnits] = useState<ISelectedUnit[]>(getSelectedUnitsFromLocalStorage());
+  const [localSelectedUnits, setLocalSelectedUnits] = useState<ISelectedUnit[]>([]);
 
   const [selectedUnit, setSelectedUnit] = useState<any>(null);
   const [selectedShip, setSelectedShip] = useState<any>(null);

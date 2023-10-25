@@ -19,7 +19,7 @@ export async function fetchUnitsData() {
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
-    console.log('response_U', response.json());
+    // console.log('response_U', response.json());
 
     return await response.json();
   } catch (error: any) {
@@ -39,7 +39,7 @@ export async function fetchUnitData(unitId: number) {
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
-    console.log('response_U2', response.json());
+    // console.log('response_U2', response.json());
     return await response.json();
   } catch (error: any) {
     console.error("There was a problem with the fetch operation:", error.message);
@@ -57,7 +57,7 @@ export async function fetchShipsData() {
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
-    console.log('response_S', response.json());
+    // console.log('response_S', response.json());
     return await response.json();
   } catch (error: any) {
     console.error("There was a problem with the fetch operation:", error.message);
