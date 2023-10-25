@@ -19,6 +19,8 @@ interface ISelectedUnitsDisplayProps {
 }
 
 function SelectedUnitsDisplay({ selectedUnits, members }: ISelectedUnitsDisplayProps) {
+  console.log('selectedUnitsDisplay', selectedUnits);
+
   const [units, setUnits] = useState<ISelectedUnit[]>([]);
   const [ships, setShips] = useState<ISelectedUnit[]>([]);
   const [localSelectedUnits, setLocalSelectedUnits] = useState<ISelectedUnit[]>([]);
