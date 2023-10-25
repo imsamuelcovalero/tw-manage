@@ -4,7 +4,10 @@ import validators from '@/app/api/middlewares/validators';
 import { handleDatabaseOperation } from '../helpers';
 
 export async function GET() {
-  return await handleDatabaseOperation(() => getMembers(), "Membros retornados com sucesso!");
+  const result = await handleDatabaseOperation(() => getMembers(), 'Membros retornados com sucesso!');
+  console.log('result_getMembers', result);
+  return result;
+  // return await handleDatabaseOperation(() => getMembers(), "Membros retornados com sucesso!");
 }
 
 export async function POST(req: Request) {
