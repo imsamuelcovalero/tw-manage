@@ -19,9 +19,9 @@ export default async function Home() {
   // const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   console.log('homeX', process.env.NODE_ENV);
 
-  let guild = null;
-  let members = [];
-  let selectedUnits = [];
+  let guild = null as IGuild | null;
+  let members = [] as IMember[];
+  let selectedUnits = [] as ISelectedUnit[];
 
   // Fetch guild data
   // guild = await apiService.getGuildData();
@@ -31,12 +31,14 @@ export default async function Home() {
 
   // If guild data is available, fetch members data
   if (guild) {
-    members = await apiService.getMembersData();
+    members = await getMembers();
+    // members = await apiService.getMembersData();
   }
 
   // If members data is available, fetch selected units data
   if (members.length > 0) {
-    selectedUnits = await apiService.getSelectedUnitsData();
+    selectedUnits = await getAllSelectedUnits();
+    // selectedUnits = await apiService.getSelectedUnitsData();
   }
   console.log('selectedUnits', selectedUnits);
 
