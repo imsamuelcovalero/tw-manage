@@ -33,7 +33,7 @@ export default async function Home() {
   if (members.length > 0) {
     selectedUnits = await apiService.getSelectedUnitsData();
   }
-  // console.log('selectedUnits', selectedUnits);
+  console.log('selectedUnits', selectedUnits);
 
   return (
     <div className="container mx-auto px-4 py-8 flex flex-col items-center">

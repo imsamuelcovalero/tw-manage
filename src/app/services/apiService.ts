@@ -17,18 +17,22 @@ async function fetchWithRevalidate(endpoint: string, options: RequestInit = {}) 
   return responseJson.data;  // Retornando apenas a propriedade data do objeto JSON.
 }
 
-export async function getMembersData() {
-  const data = await fetchWithRevalidate('/members');
+export async function getGuildData() {
+  const data = await fetchWithRevalidate('/guild');
+  console.log('dataBancoGuild', data);
   return data;
 }
 
-export async function getGuildData() {
-  const data = await fetchWithRevalidate('/guild');
+export async function getMembersData() {
+  const data = await fetchWithRevalidate('/members');
+  console.log('dataBancoMembers', data);
+
   return data;
 }
 
 export async function getSelectedUnitsData() {
   const data = await fetchWithRevalidate('/selectedUnits');
+  console.log('dataBancoSelectedUnits', data);
   return data;
 }
 

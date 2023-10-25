@@ -26,7 +26,7 @@ function UnitsDataDisplay({
   unitsData,
   shipsData
 }: IUnitsDataUpdateProps) {
-  console.log('unitsData', unitsData);
+  // console.log('unitsData', unitsData);
   const [selectedUnitDetails, setSelectedUnitDetails] = useState<IUnit | null>(null);
   // console.log('selectedUnitDetails', selectedUnitDetails);
 
