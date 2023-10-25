@@ -4,6 +4,8 @@ import { handleDatabaseOperation } from '../helpers';
 
 export async function GET() {
   console.log('getCurrentGuild');
-
-  return handleDatabaseOperation(() => getCurrentGuild(), "Guilda retornada com sucesso!");
+  const result = handleDatabaseOperation(() => getCurrentGuild(), 'Guilda retornada com sucesso!');
+  console.log('result_getCurrentGuild', result);
+  return result;
+  // return handleDatabaseOperation(() => getCurrentGuild(), "Guilda retornada com sucesso!");
 }
