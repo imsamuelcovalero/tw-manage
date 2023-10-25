@@ -18,6 +18,8 @@ async function fetchWithRevalidate(endpoint: string, options: RequestInit = {}) 
 }
 
 export async function getGuildData() {
+  console.log('getGuildDataX');
+
   const data = await fetchWithRevalidate('/guild');
   console.log('dataBancoGuild', data);
   return data;
