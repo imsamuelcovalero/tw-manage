@@ -24,7 +24,8 @@ export default async function Home() {
   let selectedUnits = [];
 
   // Fetch guild data
-  guild = await apiService.getGuildData();
+  // guild = await apiService.getGuildData();
+  guild = await getCurrentGuild();
   console.log('guildX', guild);
 
 
