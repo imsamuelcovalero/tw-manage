@@ -19,6 +19,8 @@ export async function fetchUnitsData() {
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
+    const resultText = await response.text();
+    console.log('resultText_U', resultText);
     const result = await response.json();
     console.log('result_U', result);
     return result;
