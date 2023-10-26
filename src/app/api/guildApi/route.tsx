@@ -19,7 +19,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import httpProxyMiddleware from "next-http-proxy-middleware";
 
-const proxyHandler = async (req: NextApiRequest, res: NextApiResponse) => {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const apiUrl = req.query.apiUrl as string;
 
   if (!apiUrl) {
@@ -27,10 +27,14 @@ const proxyHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     return;
   }
 
-  await httpProxyMiddleware(req, res, {
-    target: apiUrl,
-    changeOrigin: true,
-  });
-};
-
-export default proxyHandler;
+  try {
+    const response = await fetch(apiUrl);
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const data = await response.json();
+    res.status(200).json(data);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+}
