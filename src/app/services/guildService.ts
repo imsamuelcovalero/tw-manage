@@ -35,7 +35,15 @@ export async function fetchGuildData(url: string) {
     headers.append('Content-Type', 'application/json');
     headers.append('Accept', 'application/json');
 
-    const response = await fetch(apiUrl, { headers: headers, cache: 'no-store' });
+    const response = await fetch(apiUrl, {
+      cache: 'no-store',
+      headers: headers,
+      method: 'GET',
+      mode: 'cors',
+      redirect: 'follow',
+      referrerPolicy: 'no-referrer',
+      credentials: 'include'
+    });
 
     // const response = await fetch(apiUrl, { cache: 'no-store' });
     if (!response.ok) {
