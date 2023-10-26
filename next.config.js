@@ -10,7 +10,7 @@ const nextConfig = {
     return [
       {
         // matching all API routes
-        source: "/*",
+        source: "/(.*?)",
         headers: [
           { key: "Access-Control-Allow-Credentials", value: "true" },
           { key: "Access-Control-Allow-Origin", value: "*" },
@@ -19,7 +19,15 @@ const nextConfig = {
         ]
       }
     ]
-  }
+  },
+  // async rewrites() {
+  //   return [
+  //     {
+  //       source: '/:path*',
+  //       destination: 'https://tw-manage.vercel.app/:path*',
+  //     },
+  //   ]
+  // },
 }
 
 module.exports = nextConfig
