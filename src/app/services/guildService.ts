@@ -1,5 +1,6 @@
 /* File: src/app/services/guildService.ts */
 const BASE_SWGOH_URL = "https://swgoh.gg/api";
+import proxyHandler from '../api/guildApi/route'
 
 export function extractGuildId(url: string): string | null {
   const match = url.match(/\/g\/([^\/]+)\//);
@@ -19,42 +20,18 @@ export async function fetchGuildData(url: string) {
     return null;
   }
   try {
-    // const apiUrl = `${process.env.BASE_URL}${getGuildApiLink(guildId)}`;
-    // console.log('apiUrl', apiUrl);
-    // console.log('process.env.NODE_ENV', process.env.NODE_ENV);
-    // console.log('process.env.NEXT_PUBLIC_BASE_URL', process.env.NEXT_PUBLIC_BASE_URL);
+    const apiUrl = getGuildApiLink(guildId);
+    const proxyUrl = `/api/guildApi?apiUrl=${encodeURIComponent(apiUrl)}`;  // A rota do proxy
 
-    const apiUrl = process.env.NODE_ENV === 'production'
-      ? getGuildApiLink(guildId)
-      : `${process.env.NEXT_PUBLIC_BASE_URL}/api/guild-profile?guildId=${guildId}`;
-    console.log('apiUrl_G', apiUrl);
+    const proxyResponse = await fetch(proxyUrl);  // Fazendo a requisição para a rota do proxy
 
-    // cria a headers para o fetch, habilitando o cors
-    const headers = new Headers();
-    headers.append('Access-Control-Allow-Origin', '*');
-    headers.append('Content-Type', 'application/json');
-    headers.append('Accept', 'application/json');
-
-    const response = await fetch(apiUrl, {
-      cache: 'no-store',
-      headers: headers,
-      method: 'GET',
-      mode: 'cors',
-      redirect: 'follow',
-      referrerPolicy: 'no-referrer',
-      credentials: 'include'
-    });
-    console.log('response_G', response);
-
-    // const response = await fetch(apiUrl, { cache: 'no-store' });
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
+    if (!proxyResponse.ok) {
+      throw new Error(`HTTP error! Status: ${proxyResponse.status}`);
     }
-    // console.log('response_G', response.json());
-    const result = await response.json();
+
+    const result = await proxyResponse.json();
     console.log('result_G', result);
     return result;
-    // return await response.json();
   } catch (error: any) {
     console.error("There was a problem with the fetch operation:", error.message);
     return null;

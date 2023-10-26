@@ -27,6 +27,7 @@
     "http-proxy-middleware": "^2.0.6",
     "next": "^13.5.4",
     "next-connect": "^1.0.0",
+    "next-http-proxy-middleware": "^1.2.6",
     "next-joi": "^2.2.1",
     "node-fetch": "^2.7.0",
     "postcss": "8.4.30",
