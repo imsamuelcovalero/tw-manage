@@ -29,7 +29,15 @@ export async function fetchGuildData(url: string) {
       : `${process.env.NEXT_PUBLIC_BASE_URL}/api/guild-profile?guildId=${guildId}`;
     console.log('apiUrl_G', apiUrl);
 
-    const response = await fetch(apiUrl, { cache: 'no-store' });
+    // cria a headers para o fetch, habilitando o cors
+    const headers = new Headers();
+    headers.append('Access-Control-Allow-Origin', '*');
+    headers.append('Content-Type', 'application/json');
+    headers.append('Accept', 'application/json');
+
+    const response = await fetch(apiUrl, { headers: headers, cache: 'no-store' });
+
+    // const response = await fetch(apiUrl, { cache: 'no-store' });
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
