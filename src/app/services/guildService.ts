@@ -44,6 +44,7 @@ export async function fetchGuildData(url: string) {
       referrerPolicy: 'no-referrer',
       credentials: 'include'
     });
+    console.log('response_G', response);
 
     // const response = await fetch(apiUrl, { cache: 'no-store' });
     if (!response.ok) {
