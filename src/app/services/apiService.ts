@@ -84,6 +84,19 @@ async function fetchWithErrors(endpoint: string, options: RequestInit = {}) {
   return response.json();
 }
 
+export async function getSwgohData(url: string) {
+  const response = await fetchWithErrors('/swgohApi', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(url),  // Enviando a URL no corpo da requisição.
+  });
+  console.log('response', response);
+
+  return response;
+}
+
 export async function upsertGuild(data: any) {
   return fetchWithErrors('/upsertGuild', {
     method: 'POST',

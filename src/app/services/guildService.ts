@@ -1,6 +1,6 @@
 /* File: src/app/services/guildService.ts */
 const BASE_SWGOH_URL = "https://swgoh.gg/api";
-import proxyHandler from '../api/guildApi/route'
+import * as apiService from './apiService';
 
 export function extractGuildId(url: string): string | null {
   const match = url.match(/\/g\/([^\/]+)\//);
@@ -21,9 +21,9 @@ export async function fetchGuildData(url: string) {
   }
   try {
     const apiUrl = getGuildApiLink(guildId);
-    const proxyUrl = `/api/guildApi?apiUrl=${encodeURIComponent(apiUrl)}`;  // A rota do proxy
+    // const proxyUrl = `/api/guildApi?apiUrl=${encodeURIComponent(apiUrl)}`;  // A rota do proxy
 
-    const proxyResponse = await fetch(proxyUrl);  // Fazendo a requisição para a rota do proxy
+    const proxyResponse = await apiService.getSwgohData(apiUrl);  // Fazendo a requisição para o serviço da API
 
     if (!proxyResponse.ok) {
       throw new Error(`HTTP error! Status: ${proxyResponse.status}`);
