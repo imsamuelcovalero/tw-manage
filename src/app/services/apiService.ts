@@ -85,16 +85,16 @@ async function fetchWithErrors(endpoint: string, options: RequestInit = {}) {
 }
 
 export async function getSwgohData(url: string) {
-  const { data } = await fetchWithErrors('/swgohApi', {
+  const response = await fetchWithErrors('/swgohApi', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(url),  // Enviando a URL no corpo da requisição.
   });
-  console.log('response', data);
+  console.log('response', response);
 
-  return data;
+  return response.data;
 }
 
 export async function upsertGuild(data: any) {
