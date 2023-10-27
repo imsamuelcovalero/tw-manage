@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 import TwManageContext from '../providers/TwManageContext';
 import { unitDataProcessorService, shipDataProcessorService } from '../services/dataProcessorService';
 import { setInteractionStateInLocalStorage } from '../helpers/localStorageHelper';
+import LoadingOverlay from './LoadingOverlay';
 
 interface ISelectedUnitsDisplayProps {
   selectedUnits: ISelectedUnit[];
@@ -19,15 +20,15 @@ interface ISelectedUnitsDisplayProps {
 }
 
 function SelectedUnitsDisplay({ selectedUnits, members }: ISelectedUnitsDisplayProps) {
-  console.log('selectedUnitsDisplay', selectedUnits);
-
+  // console.log('selectedUnitsDisplay', selectedUnits);
   const [units, setUnits] = useState<ISelectedUnit[]>([]);
   const [ships, setShips] = useState<ISelectedUnit[]>([]);
   const [localSelectedUnits, setLocalSelectedUnits] = useState<ISelectedUnit[]>([]);
-
   const [selectedUnit, setSelectedUnit] = useState<any>(null);
   const [selectedShip, setSelectedShip] = useState<any>(null);
   const [forceUpdateKey, setForceUpdateKey] = useState<number>(0);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const { isMembersTableExpanded } = useContext(TwManageContext);
 
@@ -83,7 +84,7 @@ function SelectedUnitsDisplay({ selectedUnits, members }: ISelectedUnitsDisplayP
       // console.log('player', player.units);
 
       const unitsData = await fetchUnitsData();
-      console.log('unitsDataAPI', unitsData);
+      // console.log('unitsDataAPI', unitsData);
       const shipsData = await fetchShipsData();
       // console.log('shipsData', shipsData);
       setUnits(processUnitData(unitsData.data));
@@ -143,6 +144,7 @@ function SelectedUnitsDisplay({ selectedUnits, members }: ISelectedUnitsDisplayP
   };
 
   async function handleFinalizeSelection() {
+    setIsLoading(true);  // Iniciar o carregamento
     try {
       // 1. Filtra as unidades selecionadas para obter apenas as unidades (type === 'UNIT') e apenas os navios (type === 'SHIP').
       const selectedUnitsOnly = localSelectedUnits.filter(unit => unit.type === 'UNIT');
@@ -185,11 +187,13 @@ function SelectedUnitsDisplay({ selectedUnits, members }: ISelectedUnitsDisplayP
         toast.error('Ocorreu um erro inesperado.');
       }
     }
+    setIsLoading(false);  // Parar o carregamento
   }
 
   return (
     !isMembersTableExpanded && (
-      <div className="selected-units-section p-6 bg-white shadow-md rounded-lg">
+      <div className="selected-units-section p-6 bg-white shadow-md rounded-lg" >
+        <LoadingOverlay isLoading={isLoading} />
         <h2 className="text-xl font-bold mb-4 text-center">Unit Selection</h2>
 
         <div className="dropdowns-section mb-4 flex gap-4 flex-col md:flex-row">
@@ -257,7 +261,7 @@ function SelectedUnitsDisplay({ selectedUnits, members }: ISelectedUnitsDisplayP
             <p className="text-red-500">At least one unit must be selected.</p>
           )}
         </div>
-      </div>
+      </div >
     )
   );
 }

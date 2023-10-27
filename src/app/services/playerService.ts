@@ -4,7 +4,7 @@ const BASE_SWGOH_URL = "https://swgoh.gg/api";
 import * as apiService from './apiService';
 
 export function getPlayerApiLink(allyCode: string) {
-  return `${BASE_SWGOH_URL}/player?allyCode=${allyCode}`;
+  return `${BASE_SWGOH_URL}/player/${allyCode}/`;
 }
 
 export async function fetchPlayerData(allyCode: string) {
@@ -15,8 +15,6 @@ export async function fetchPlayerData(allyCode: string) {
 
   return proxyResponse;
   // try {
-
-
   //   const response = await fetch(apiUrl, { cache: 'no-store' });
 
   //   if (!response.ok) {

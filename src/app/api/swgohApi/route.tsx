@@ -10,10 +10,13 @@ import { NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
   const apiUrl = await req.json();  // Obtain the URL of the external endpoint from the request body
+  // console.log('apiUrlX', apiUrl);
+
   const response = await fetch(apiUrl);
+
   if (response.ok) {
     const data = await response.json();
-    console.log('dataX', data);
+    // console.log('dataX', data);
     return NextResponse.json(data, { status: 200 });
   } else {
     return NextResponse.json({ message: "No data returned from operation." }, { status: 204 });  // Status 204: No Content
