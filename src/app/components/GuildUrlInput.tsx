@@ -51,6 +51,8 @@ function GuildUrlInput({ guild }: { guild?: IGuild }) {
 
     try {
       const data = await fetchGuildData(inputValue);
+      console.log('dataX', data);
+
 
       const transformedData = guildData(data.data);
       // console.log('transformedData', transformedData);

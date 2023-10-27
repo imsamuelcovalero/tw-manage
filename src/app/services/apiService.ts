@@ -77,24 +77,27 @@ export async function getSelectedUnitsData() {
 
 async function fetchWithErrors(endpoint: string, options: RequestInit = {}) {
   const response = await fetch(`${BASE_URL}${endpoint}`, options);
+  // console.log('responseFetch', response);
+
   if (!response.ok) {
     const data = await response.json();
-    throw new Error(data.message || 'Something went wrong');
+    throw new Error(data.message || `HTTP error! Status: ${response.status} - Message: ${data.message}`);
   }
   return response.json();
 }
 
 export async function getSwgohData(url: string) {
-  const response = await fetchWithErrors('/swgohApi', {
+  const data = await fetchWithErrors('/swgohApi', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(url),  // Enviando a URL no corpo da requisição.
+    cache: 'no-store',
   });
-  console.log('response', response);
+  // console.log('response', data);
 
-  return response.data;
+  return data;
 }
 
 export async function upsertGuild(data: any) {

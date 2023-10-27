@@ -19,21 +19,11 @@ export async function fetchGuildData(url: string) {
     console.warn("Invalid URL provided. Unable to extract guild ID.");
     return null;
   }
-  try {
-    const apiUrl = getGuildApiLink(guildId);
-    // const proxyUrl = `/api/guildApi?apiUrl=${encodeURIComponent(apiUrl)}`;  // A rota do proxy
 
-    const proxyResponse = await apiService.getSwgohData(apiUrl);  // Fazendo a requisição para o serviço da API
+  const apiUrl = getGuildApiLink(guildId);
 
-    if (!proxyResponse.ok) {
-      throw new Error(`HTTP error! Status: ${proxyResponse.status}`);
-    }
+  const proxyResponse = await apiService.getSwgohData(apiUrl);
+  console.log('proxyResponse', proxyResponse);
 
-    const result = await proxyResponse.json();
-    console.log('result_G', result);
-    return result;
-  } catch (error: any) {
-    console.error("There was a problem with the fetch operation:", error.message);
-    return null;
-  }
+  return proxyResponse;
 }
