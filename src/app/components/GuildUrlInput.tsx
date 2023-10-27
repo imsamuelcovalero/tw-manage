@@ -11,9 +11,9 @@ import TwManageContext from '../providers/TwManageContext';
 import { setInteractionStateInLocalStorage } from '../helpers/localStorageHelper';
 
 function GuildUrlInput({ guild }: { guild?: IGuild }) {
-  console.log('guildUrlInputX');
-
   const [inputValue, setInputValue] = useState(guild?.url || "");
+  console.log('GuildInputValueX', guild?.name);
+
   const [isValidUrl, setIsValidUrl] = useState(true);
 
   const { toggleMembersTable } = useContext(TwManageContext);
@@ -52,7 +52,6 @@ function GuildUrlInput({ guild }: { guild?: IGuild }) {
     try {
       const data = await fetchGuildData(inputValue);
       console.log('dataX', data);
-
 
       const transformedData = guildData(data.data);
       // console.log('transformedData', transformedData);
