@@ -1,6 +1,6 @@
 /* File: src/app/api/helper/helper.ts */
 import { NextResponse } from 'next/server';
-// import { revalidatePage } from './revalidate/revalidate'
+import { revalidatePage } from './revalidate/revalidate'
 
 async function handleDatabaseOperation<T>(operation: () => Promise<T>, successMessage: string): Promise<NextResponse> {
   try {
@@ -8,7 +8,7 @@ async function handleDatabaseOperation<T>(operation: () => Promise<T>, successMe
     // console.log('resultX', result);
 
     if (result) {
-      // await revalidatePage("/")
+      await revalidatePage("/")
       return NextResponse.json({ data: result, message: successMessage }, { status: 200 });
     } else {
       return NextResponse.json({ message: "No data returned from operation." }, { status: 204 });  // Status 204: No Content
