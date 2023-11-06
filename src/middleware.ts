@@ -42,6 +42,11 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(absoluteUrl);
   }
 
+  // Se o usuário estiver logado e a URL atual for '/api/revalidate', atualiza a página para receber novas informações do banco de dados.
+  if (user && req.nextUrl.pathname === '/api/revalidate') {
+    // console.log('XABLAU3');
+  }
+
   return res
 }
 

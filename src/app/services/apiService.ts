@@ -107,6 +107,7 @@ export async function upsertGuild(data: any) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
+    next: { revalidate: 0 }, // Seconds
   });
 }
 
@@ -117,6 +118,7 @@ export async function upsertMembers(data: any) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
+    next: { revalidate: 0 }, // Seconds
   });
 }
 
@@ -126,7 +128,8 @@ export async function removeMembers(allyCodes: number[]) {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ allyCodesData: allyCodes }),  // Enviando a lista de allyCodes no corpo da requisição.
+    body: JSON.stringify({ allyCodesData: allyCodes }),
+    next: { revalidate: 0 }, // Seconds
   });
 }
 
