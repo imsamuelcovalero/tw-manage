@@ -3,8 +3,10 @@ import React from 'react'
 import { getAllUnits, getAllShips } from '../services/prismaUnitsService';
 import UnitsDataDisplay from '../components/UnitsDataDisplay';
 import AuthenticatedLayout from '../authenticatedLayout';
+import { revalidatePage } from '../api/revalidate/revalidate';
 
 export default async function Page() {
+  await revalidatePage('/units');
   const unitsData = await getAllUnits();
 
   const shipsData = await getAllShips();
