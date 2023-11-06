@@ -8,6 +8,7 @@ import GuildMembersTable from './components/GuildMembersTable';
 import SelectedUnitsDisplay from './components/SelectedUnitsDisplay';
 import { IGuild, IMember, ISelectedUnit } from './interfaces/types';
 import * as apiService from './services/apiService';
+import { revalidatePage } from './api/revalidate/revalidate';
 
 // interface IHomeProps {
 //   guild: IGuild;
@@ -25,6 +26,7 @@ export default async function Home() {
 
   // Fetch guild data
   // guild = await apiService.getGuildData();
+  await revalidatePage('/');
   guild = await getCurrentGuild();
   console.log('guildX', guild);
 

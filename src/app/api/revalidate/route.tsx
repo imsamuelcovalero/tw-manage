@@ -3,10 +3,10 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 
-console.log('revalidatePath');
+// console.log('revalidatePath');
 
 export async function POST(req: NextRequest) {
-  console.log('req', req);
+  // console.log('req', req);
 
   const origin = req.nextUrl.origin;
   console.log('origin', origin);
